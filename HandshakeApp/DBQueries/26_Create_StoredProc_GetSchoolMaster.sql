@@ -1,0 +1,8 @@
+DELIMITER //
+
+CREATE PROCEDURE GetSchoolMaster ()
+BEGIN
+	SELECT Id,Name FROM SchoolMaster;
+END //
+
+DELIMITER ;
