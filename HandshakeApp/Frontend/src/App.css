@@ -1,0 +1,402 @@
+body {
+  font-family: "Suisse Int'l", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+  background: #f7f7f7;
+}
+
+
+.form-heading { color:#fff; font-size:23px;}
+.panel h2{ color:#444444; font-size:18px; margin:0 0 8px 0;}
+.panel p { color:#777777; font-size:14px; margin-bottom:30px; line-height:24px;}
+.login-form .form-control {
+  background: #f7f7f7 none repeat scroll 0 0;
+  border: 1px solid #d4d4d4;
+  border-radius: 4px;
+  font-size: 14px;
+  height: 50px;
+  line-height: 50px;
+}
+.main-div {
+  background: transparent none repeat scroll 0 0;
+  border-radius: 2px;
+  margin: 10px auto 30px;
+  padding: 22px 70px 62px 70px;
+  margin-bottom: 60px;
+}
+
+.login-form .form-group {
+  margin-bottom:10px;
+}
+.login-form{ text-align:center;}
+.forgot a {
+  color: #777777;
+  font-size: 14px;
+  text-decoration: underline;
+}
+.login-form  .btn.btn-primary {
+  background: #5b9fda none repeat scroll 0 0;
+    border-color: #5b9fda;
+  color: #ffffff;
+  font-size: 14px;
+  width: 100%;
+  height: 50px;
+  line-height: 50px;
+  padding: 0;
+}
+.forgot {
+  text-align: left; margin-bottom:30px;
+}
+.botto-text {
+  color: #ffffff;
+  font-size: 14px;
+  margin: auto;
+}
+.back { text-align: left; margin-top:10px;}
+.back a {color: #444444; font-size: 13px;text-decoration: none;}
+
+.error{
+  color : red;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+
+.navbar-inverse{
+  background-color: #fff;
+  border : 0px solid #fff;
+  border-bottom:1px solid #e0e0e0;
+  
+}
+
+.navbar-brand__logo-full{
+  height: 20px;
+}
+
+.navbar-header{
+  margin-top: 10px;
+}
+
+.navbar-inverse .navbar-nav>li>a:hover {
+  color: #000;
+  background-color: transparent;
+}
+
+.heading {
+  font-weight: 700;
+}
+
+h1, .h1 {
+  font-size: 33px;
+}
+
+.panel{
+  border: 0px solid transparent;
+}
+
+
+.Dropdown-control{
+  border-radius: 8px 8px 0px 0px !important;
+}
+
+.Dropdown-menu{
+  border-radius: 0px 0px 8px 8px !important;
+}
+
+.form-hint {
+  margin-bottom: 8px;
+}
+
+.profileContainer{
+  max-width: 960px;
+  margin: 0 auto;
+  min-width: 320px;
+  padding: 24px 16px 0;
+}
+
+.dataCard{
+  margin-bottom: 24px;
+    font-family: Suisse Int\'l,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,sans-serif;
+    color: rgba(0,0,0,.8);
+    background-color: #fff;
+    border-radius: 3px;
+    -webkit-box-shadow: 0 0 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
+    box-shadow: 0 0 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
+}
+
+.itemsmain{
+  padding: 24px;
+}
+
+.EducationCard{
+  margin-bottom: 24px;
+  font-family: Suisse Int\'l,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,sans-serif;
+  color: rgba(0,0,0,.8);
+  background-color: #fff;
+  border-radius: 3px;
+  -webkit-box-shadow: 0 0 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
+  box-shadow: 0 0 4px 1px rgba(0,0,0,.05), 2px 2px 2px 1px rgba(0,0,0,.05);
+}
+
+.CardHeading{
+  font-size: 18px;
+  margin: 0 0 .7em;
+    font-family: Suisse Int\'l,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,sans-serif;
+    color: rgba(0,0,0,.98);
+    line-height: 1.33em;
+    font-weight: 500;
+}
+
+.avatarImage{
+  background-image: url('https://s3.amazonaws.com/handshake.production/app/public/assets/schools/122/small/hs-school-logo-data.?1559840573');
+}
+
+.pos{
+  position: relative;
+}
+
+.CClogo{
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.logoInside{
+  height: 40px;
+  width: 40px;
+  min-width: 40px;
+  line-height: 40px;
+  font-size: 40px;
+}
+
+.avatarImage{
+  display: block;
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-position: 50%;
+  background-repeat: no-repeat;
+  background-color: #fff;
+}
+
+.editButtonDiv{
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.editButtonDiv :hover{
+  background: #f7f7f7;
+  color: #1153b1;
+}
+
+.editButton{
+  padding: 4px 8px;
+  font-size: 13px;
+  line-height: 16px;
+  background: transparent;
+  border: 0;
+  color: #1569e0;
+  display: inline-block;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 3px;
+  transition: background-color .2s;
+  font-family: Suisse Int\'l,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,sans-serif;
+}
+
+.svgForEdit{
+  overflow: visible;
+  width: 1em;
+  display: inline-block;
+  font-size: inherit;
+  height: 1em;
+  vertical-align: -0.125em;
+  line-height: 16px;
+}
+
+.mainOverViewCardData{
+  text-align: center;
+  word-break: break-word;
+}
+
+.divProfilePicButton{
+  margin-bottom: 16px;
+}
+
+.profilePicButton{
+  position: relative;
+    width: 104px;
+    height: 104px;
+    border-radius: 50%;
+    background-color: #f5f9ff;
+    border: 1px solid #e0e0e0;
+    color: #1569e0;
+    font-size: 24px;
+    background-size: contain;
+    background-position: 50%;
+    -webkit-transition: background-color .2s,-webkit-box-shadow .2s;
+    transition: background-color .2s,-webkit-box-shadow .2s;
+    -o-transition: background-color .2s,box-shadow .2s;
+    transition: background-color .2s,box-shadow .2s;
+    transition: background-color .2s,box-shadow .2s,-webkit-box-shadow .2s;
+    overflow: hidden;
+}
+
+.profilePicButton:hover{
+  background-color: #cfe2fc;
+}
+
+.svgInsideProfilePic{
+  overflow: visible;
+  width: 1em;
+  display: inline-block;
+  font-size: inherit;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+
+.addPhotoText{
+  font-size: 13px;
+  line-height: 20px;
+  color: #1569e0;
+}
+
+.nameHeading{
+  margin: 0;
+  font-size: 24px;
+  font-family: Suisse Int\'l,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,sans-serif;
+  color: rgba(0,0,0,.98);
+  line-height: 1.33em;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.collegeNameDiv{
+  text-align: center;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+  text-transform: capitalize;
+}
+
+.degreeNameDiv{
+  margin-top: 0;
+  text-align: center;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.divAfterDegree{
+  margin-top: 0;
+  text-align: center;
+  font-weight: 500; 
+}
+
+.divSpace{
+  margin-top: 0;
+  text-align: center;
+  color: rgba(0,0,0,.56);
+  font-size: 16px;
+  line-height: 24px;
+}
+
+.fullstory-hidden{
+  text-align: center;
+  word-break: break-word;
+}
+
+.divGPA{
+  color: rgba(0,0,0,.56);
+}
+
+.editForm{
+  text-align: left;
+}
+
+.yearLabelText{
+  color: rgba(0,0,0,.56);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.divButtons{
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  display: flex;
+  width: 100%;
+}
+
+.divCancelButton{
+  flex: 1 1 50%;
+  order: 0;
+  min-width: 0;
+}
+
+.divButtonWrapper{
+  margin-right: 4px;
+}
+
+.cancelButton{
+  display: block;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 20px;
+    text-decoration: none;
+    border: 0;
+    border-radius: 3px;
+    padding: 8px 12px;
+    transition: background-color .2s;
+    font-family: Suisse Int\'l,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,sans-serif;
+    background-color: rgba(0,0,0,.06);
+    color: rgba(0,0,0,.98);
+}
+
+.divSaveButton{
+  flex: 1 1 50%;
+  order: 0;
+  min-width: 0;
+}
+
+.saveButton{
+  background-color: #1569e0;
+  color: #fff;
+  display: block;
+  width: 100%;
+  text-align: center;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 20px;
+  text-decoration: none;
+  border: 0;
+  border-radius: 3px;
+  padding: 8px 12px;
+  transition: background-color .2s;
+  font-family: Suisse Int\'l,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,sans-serif;
+}
+
+.svgGPA{
+  width: 0.875em;
+  overflow: visible;
+}
+
+.helpText{
+  color: #1569e0;
+  font-size: 14px;
+  line-height: 22px;
+}
+
+.cardheadingdiv{
+  justify-content: space-between;
+  display: flex;
+  width: 100%;
+}
+
+.helptextlabel{
+  font-weight: 400;
+  margin-bottom: 8px;
+}
