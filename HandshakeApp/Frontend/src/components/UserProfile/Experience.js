@@ -23,9 +23,9 @@ class Experience extends Component {
 
     render(){
         return(
-            <div class="dataCard">
-                <div class="itemsmain">
-                    <h2 class="CardHeading">Work & Volunteer Experience</h2>
+            <div className="dataCard">
+                <div className="itemsmain">
+                    <h2 className="CardHeading">Work & Volunteer Experience</h2>
                 </div>
             </div>
         )

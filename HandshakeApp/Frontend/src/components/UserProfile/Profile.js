@@ -64,6 +64,7 @@ class Profile extends Component {
                     ,startDate : response.data[3][0].StartDate
                     ,endDate : response.data[3][0].EndDate
                     ,profilePicPath : response.data[2][0].ProfilePicturePath
+                   ,skillsData : response.data[4]
                 });
                 console.log(response);
             });
@@ -118,8 +119,8 @@ class Profile extends Component {
                                     cumulativeGPA = {this.state.cumulativeGPA}
                                     email = {this.state.email}
                                     profilePicPath = {this.state.profilePicPath} />
-                            {/* <Skills/>
-                            <Documents/> */}
+                            <Skills skillsData={this.state.skillsData} email = {this.state.email}/>
+                            <Documents/>
                             <Personalinfo emailId = {this.state.emailId} gender = {this.state.gender}/>
                         </div>
                         <div className="col-md-8">
@@ -128,7 +129,7 @@ class Profile extends Component {
                                         endDate = {this.state.endDate} major = {this.state.major}
                                         cumulativeGPA = {this.state.cumulativeGPA}
                                         email = {this.state.email} />
-                            {/* <Experience/> */}
+                            <Experience/>
                         </div>
                     </div>
                 </div> 

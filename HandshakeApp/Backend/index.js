@@ -10,7 +10,7 @@ var configData = require('./config.js');
 var databaseConString = configData.databaseConString;
 var uploadPath = configData.uploadPath;
 var genSalt = require("randomstring");
-var fileUpload = require('express-fileupload');
+var fileUpload = require('express-fileupload'); 
 
 const bcrypt = require('bcrypt');
 app.use(fileUpload());
@@ -166,6 +166,27 @@ async function UpdateProfilePicLocation(userId,profilePicPath){
     return results;
 }
 
+async function addUserSkill(data){ 
+    var query = "CALL addUserSkill(?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var [results, fields] = await con.query(query, [data.userId,data.skill]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+async function deleteUserSkill(data){ 
+    var query = "CALL deleteUserSkill(?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var [results, fields] = await con.query(query, [data.userId,data.skill]);
+    await con.end();
+    console.log(results);
+    return results;
+}
+
 
 app.post('/login',async function(req,res){
     console.log("Inside Login Post Request");
@@ -238,7 +259,6 @@ app.get('/Signup', async function(req,res){
 
 app.post('/uploadProfilePic', async function(req,res){
     console.log("inside uploadProfile pic");
-    console.log(req);
     let profilePic = req.files.file;
     let [fileExtension] = profilePic.name.split('.').splice(-1);
     console.log(fileExtension);
@@ -255,6 +275,23 @@ app.post('/uploadProfilePic', async function(req,res){
 
 })
 
+app.post('/updateSkill',async function(req, res){
+    console.log("inside update skill");
+    console.log(req);
+    if(req.body.type === "AddUserSkill"){
+        let results = await addUserSkill(req.body);
+    } else if(req.body.type === "DeleteUserSkill"){
+        let results = await deleteUserSkill(req.body);
+    }
+
+    res.writeHead(200,{  
+        'Content-Type' : 'application/json'
+    });
+    //console.log("SchoolMaster : ",JSON.stringify(results));
+    res.end(JSON.stringify(results)); 
+
+})
+
 
 app.post('/profile', async function(req,res){
 
@@ -268,10 +305,10 @@ app.post('/profile', async function(req,res){
         results = await UpdateObjective(req.body);
     }
 
-    res.writeHead(200,{ 
+    res.writeHead(200,{  
         'Content-Type' : 'application/json'
     });
-    console.log("SchoolMaster : ",JSON.stringify(results));
+    //console.log("SchoolMaster : ",JSON.stringify(results));
     res.end(JSON.stringify(results));
 })
 

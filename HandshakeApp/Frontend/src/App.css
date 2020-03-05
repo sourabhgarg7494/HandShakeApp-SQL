@@ -400,3 +400,13 @@ h1, .h1 {
   font-weight: 400;
   margin-bottom: 8px;
 }
+
+.skillTable > tbody > tr >td {
+  border: 1px solid #e0e0e0;
+  padding: 5%;
+}
+
+.skillTable > thead > tr >th {
+  border: 1px solid #e0e0e0;
+  padding: 4%;
+}
