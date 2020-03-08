@@ -21,18 +21,16 @@ app.set('view engine', 'ejs');
 // console.log(data);
 
 
-
-
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 
 //use express session to maintain session data
 app.use(session({
-    secret              : 'cmpe273_kafka_passport_mongo',
-    resave              : false, // Forces the session to be saved back to the session store, even if the session was never modified during the request
-    saveUninitialized   : false, // Force to save uninitialized session to db. A session is uninitialized when it is new but not modified.
-    duration            : 60 * 60 * 1000,    // Overall duration of Session : 30 minutes : 1800 seconds
-    activeDuration      :  5 * 60 * 1000
+    secret              : 'HandshakeApp',
+    resave              : false,
+    saveUninitialized   : false,
+    duration            : 60 * 60 * 1000,
+    activeDuration      :  5 * 60 * 1000,
 }));
 
 // app.use(bodyParser.urlencoded({
@@ -60,6 +58,8 @@ app.use(function(req, res, next) {
     {"BookID" : "2", "Title" : "Book 2", "Author" : "Author 2"},
     {"BookID" : "3", "Title" : "Book 3", "Author" : "Author 3"}
 ]
+
+var UserTokens = []
 
 
 async function getUserData(UserEmailId){ 
@@ -100,6 +100,33 @@ async function createUserData(data){
     return results;
 }
 
+async function createCompanyUser(data){ 
+    var query = "CALL CreateCompanyUser(?,?,?,?,?,?,?,?,?,?,?)";
+
+    var salt = genSalt.generate();
+   
+    var passwordHash = bcrypt.hashSync(data.Password + salt, 10);
+    console.log(passwordHash); 
+
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var [results, fields] = await con.query(query,[ data.CompanyName,
+        data.EmailAddress,
+        data.Country,
+        data.State,
+        data.City,
+        data.Address,
+        data.Phone,
+        data.Description,
+        passwordHash,
+        salt,
+        'Company']);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
 async function getSignUpMasterData(){ 
     var query = "CALL GetSchoolMaster()";
     var con = await mysql.createConnection(databaseConString);
@@ -107,15 +134,34 @@ async function getSignUpMasterData(){
     var [results, fields] = await con.query(query);
 
     await con.end();
-    console.log(results[0][0]);
-    return results[0];
+    console.log(results);
+    return results;
 }
 
+async function getCompanySignUpMasterData(){ 
+    var query = "CALL GetCompanySignUpMaster()";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var [results, fields] = await con.query(query);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+
+
 async function getProfileData(data){ 
+    var profileEmail = data.userId;
+    if(profileEmail === ""){
+        var UserId = getUserIdFromToken(data.token);
+    }else{
+        var UserId = profileEmail;
+    }
     var query = "CALL GetUserData(?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
-    var [results, fields] = await con.query(query, data.userId);
+    var [results, fields] = await con.query(query, UserId);
 
     await con.end();
     console.log(results);
@@ -126,6 +172,7 @@ async function updateOverviewData(data){
     var query = "CALL UpdateOverviewData(?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
+    var UserId = getUserIdFromToken(data.token);
     var [results, fields] = await con.query(query, [data.userId,data.firstName,data.lastName]);
 
     await con.end();
@@ -137,7 +184,8 @@ async function updateEducationData(data){
     var query = "CALL UpdateEducationData(?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
-    var [results, fields] = await con.query(query, [data.userId,data.schoolName,data.major]);
+    var UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query, [UserId,data.schoolName,data.major]);
 
     await con.end();
     console.log(results);
@@ -148,7 +196,8 @@ async function UpdateObjective(data){
     var query = "CALL UpdateObjective(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
-    var [results, fields] = await con.query(query, [data.userId,data.Objective]);
+    var UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query, [UserId,data.myJourney]);
 
     await con.end();
     console.log(results);
@@ -170,7 +219,31 @@ async function addUserSkill(data){
     var query = "CALL addUserSkill(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
-    var [results, fields] = await con.query(query, [data.userId,data.skill]);
+    let UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query, [UserId,data.skill]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+async function getStudentFilterData(data){ 
+    var query = "CALL GetStudentFilterData(?,?,?,?,?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    let UserId = getUserIdFromToken(data.token);
+    console.log("inside con");
+    var [results, fields] = await con.query(query, [data.studentName,data.schoolName,data.major,data.startIndex,data.rowCount,UserId]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+async function getStudentFilterMaster(){
+    var query = "CALL getStudentFilterMasterData()";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var [results, fields] = await con.query(query);
 
     await con.end();
     console.log(results);
@@ -181,10 +254,18 @@ async function deleteUserSkill(data){
     var query = "CALL deleteUserSkill(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
-    var [results, fields] = await con.query(query, [data.userId,data.skill]);
+    let UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query, [UserId,data.skill]);
     await con.end();
     console.log(results);
     return results;
+}
+
+function getUserIdFromToken(token){
+    var User = null;
+    User = UserTokens.filter(user => user.Token == token);
+    console.log("User JSON: ",User);
+    return User[0].userId;
 }
 
 
@@ -194,12 +275,15 @@ app.post('/login',async function(req,res){
     console.log("Req Body : ",req.body);
     results = await getUserData(req.body.username);
     
-    var {EmailId, Password, PasswordSalt} = results;
+    var {EmailId, Password, PasswordSalt, UserRole} = results;
     if(EmailId === req.body.username){
             console.log("Inside If");
              bcrypt.compare(req.body.password + PasswordSalt, Password, function(err, r) {
                 if(r) {
-                    res.cookie('cookie', req.body.username ,{maxAge: 900000, httpOnly: false, path : '/'});
+                    var token = genSalt.generate();
+                    res.cookie('cookie', token ,{maxAge: 900000, httpOnly: false, path : '/'});
+                    res.cookie('userrole', UserRole ,{maxAge: 900000, httpOnly: false, path : '/'});
+                    UserTokens.push({userId: EmailId,role : UserRole ,Token : token});
                     req.session.user = req.body.username;
                     res.writeHead(200,{
                         'Content-Type' : 'text/plain'
@@ -215,11 +299,56 @@ app.post('/login',async function(req,res){
          }
 });
 
+app.post('/logout',async function(req,res){
+    console.log("Inside logout Post Request");
+    console.log("Req Body : ",req.body);
+    var isTokenDeleted;
+    UserTokens.filter(function(user){
+        if(user.Token === req.body.token){
+            UserTokens.splice(UserTokens.indexOf(user),1);
+            isTokenDeleted = true;
+        }
+    });
+
+    if(isTokenDeleted){
+        res.writeHead(200, {
+            'Content-Type': 'text/plain'
+        })
+        res.end("User Token Deleted");
+    }
+    else{
+        res.writeHead(200, {
+            'Content-Type': 'text/plain'
+        })
+        res.end("User Token Not Found");
+    }
+});
+
+
 //Route to handle Post Request Call
 app.post('/Signup',async function(req,res){
     console.log("Inside Sign up Post Request");
     console.log("Req Body : ",req.body);
     results = await createUserData(req.body);
+
+    if (results){
+        res.writeHead(200,{
+            'Content-Type' : 'text/plain'
+        })
+        res.end("User Created");
+    }
+    else{
+        res.writeHead(200,{
+            'Content-Type' : 'text/plain'
+        })
+        res.end("User Not Created");
+    }
+});
+
+app.post('/companySignUp',async function(req,res){
+    console.log("Inside Company Sign up Post Request");
+    console.log("Req Body : ",req.body);
+    results = await createCompanyUser(req.body);
 
     if (results){
         res.writeHead(200,{
@@ -245,7 +374,6 @@ app.get('/home', function(req,res){
     
 })
 
-//Route to get All Books when user visits the Home Page
 app.get('/Signup', async function(req,res){
     console.log("Inside signup Login");    
     results = await getSignUpMasterData();
@@ -257,18 +385,30 @@ app.get('/Signup', async function(req,res){
     res.end(JSON.stringify(results));
 })
 
+
+app.get('/companySignUp', async function(req,res){ 
+    console.log("Inside Company signup Login");    
+    results = await getCompanySignUpMasterData();
+
+    res.writeHead(200,{
+        'Content-Type' : 'application/json'
+    });
+    console.log("Alldata: ",JSON.stringify(results));
+    res.end(JSON.stringify(results));
+})
+
 app.post('/uploadProfilePic', async function(req,res){
     console.log("inside uploadProfile pic");
     let profilePic = req.files.file;
     let [fileExtension] = profilePic.name.split('.').splice(-1);
-    console.log(fileExtension);
-    let newFilename = req.body.userId+"-ProfilePic-"+Date.now()+"."+fileExtension;
+    let UserId = getUserIdFromToken(req.body.token);
+    let newFilename = UserId+"-ProfilePic-"+Date.now()+"."+fileExtension;
 
     profilePic.mv(`${uploadPath}/${newFilename}`, async function(err) {
         if (err) {
             return res.status(500).send(err);
         }else{
-            results = await UpdateProfilePicLocation(req.body.userId,newFilename);
+            results = await UpdateProfilePicLocation(UserId,newFilename);
             res.json({file: results[0][0].ProfilePicturePath});
         }
     });
@@ -292,6 +432,34 @@ app.post('/updateSkill',async function(req, res){
 
 })
 
+app.get('/studentSearchFilter',async function(req, res){
+    console.log("inside student Search Filter get");
+    console.log(req);
+
+    let results = await getStudentFilterMaster();
+
+    res.writeHead(200,{  
+        'Content-Type' : 'application/json'
+    });
+    //console.log("SchoolMaster : ",JSON.stringify(results));
+    res.end(JSON.stringify(results)); 
+
+})
+
+app.post('/studentSearchFilter',async function(req, res){
+    console.log("inside student Search Filter post");
+    console.log(req);
+
+    let results = await getStudentFilterData(req.body);
+
+    res.writeHead(200,{  
+        'Content-Type' : 'application/json'
+    });
+    console.log("Search REsults : ",JSON.stringify(results));
+    res.end(JSON.stringify(results)); 
+
+})
+
 
 app.post('/profile', async function(req,res){
 
@@ -302,6 +470,8 @@ app.post('/profile', async function(req,res){
     }else if(req.body.type === "UpdateEducationData"){
         results = await updateEducationData(req.body);
     }else if(req.body.type === "MyJourneyUpdate"){
+        console.log("MyJourneyUpdate");
+        console.log(req.body);
         results = await UpdateObjective(req.body);
     }
 
@@ -311,6 +481,30 @@ app.post('/profile', async function(req,res){
     //console.log("SchoolMaster : ",JSON.stringify(results));
     res.end(JSON.stringify(results));
 })
+
+app.post('/companyProfile', async function(req,res){
+
+    // if (req.body.type === "FirstTimeLoad"){
+    //     results = await getProfileData(req.body);
+    // }else if(req.body.type === "UpdateOverviewData"){
+    //     results = await updateOverviewData(req.body);
+    // }else if(req.body.type === "UpdateEducationData"){
+    //     results = await updateEducationData(req.body);
+    // }else if(req.body.type === "MyJourneyUpdate"){
+    //     console.log("MyJourneyUpdate");
+    //     console.log(req.body);
+    //     results = await UpdateObjective(req.body);
+    // }
+
+    res.writeHead(200,{  
+        'Content-Type' : 'application/json'
+    });
+    //console.log("SchoolMaster : ",JSON.stringify(results));
+    //res.end(JSON.stringify(results));
+    res.end("");
+})
+
+
 
 //start your server on port 3001
 app.listen(3001);

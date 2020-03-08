@@ -3,6 +3,7 @@ import '../../App.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import {Redirect} from 'react-router';
+import { serverUrl } from "../../config";
 
 class MyJourney extends Component {
     constructor(props){
@@ -34,7 +35,6 @@ class MyJourney extends Component {
         this.setState({
             isEditEnabled : true
         })
-        console.log(this.state.isValueUpdated);
     }
 
     cancelClick(e) {
@@ -51,6 +51,7 @@ class MyJourney extends Component {
         axios.defaults.withCredentials = true;
         var data = {
             userId: this.props.email
+            ,token : cookie.load('cookie')
             ,type : this.state.type
             ,myJourney : this.state.myJourney
         }
@@ -74,6 +75,13 @@ class MyJourney extends Component {
     }
 
     render(){
+        var editButton = null;
+        if(!this.props.isReadOnly){
+            editButton = (<button type="button" className="cancelButton" onClick={this.editClick} >
+                            <span>Edit</span>
+                        </button>)
+        }
+
         var objective;
         if(this.state.isEditEnabled){
             objective = (<div className="row"><div className="col-md-10">
@@ -98,9 +106,7 @@ class MyJourney extends Component {
                     </div>
                     <div className="col-md-2"> 
                         <div className ="form-group">
-                            <button type="button" className="cancelButton" onClick={this.editClick} >
-                                <span>Edit</span>
-                            </button>
+                            {editButton}
                         </div>
                     </div>
                     </div>)
@@ -114,9 +120,7 @@ class MyJourney extends Component {
             </div>
             <div className="col-md-2"> 
                 <div className ="form-group">
-                    <button type="button" className="cancelButton" onClick={this.editClick} >
-                        <span>Edit</span>
-                    </button>
+                    {editButton}
                 </div>
             </div>
             </div>)

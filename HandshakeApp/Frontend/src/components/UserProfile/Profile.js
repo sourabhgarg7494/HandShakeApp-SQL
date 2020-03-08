@@ -12,6 +12,7 @@ import Experience from './Experience';
 import MyJourney from './myJourney';
 import { connect } from "react-redux";
 import {updateLoginInfo} from "../../js/actions/index";
+import { serverUrl } from "../../config";
 
 class Profile extends Component {
     constructor(props){
@@ -34,20 +35,32 @@ class Profile extends Component {
             ,userId : ""
             ,type : "FirstTimeLoad"
             ,email : this.props.email
+            ,isReadOnly : this.props.location && this.props.location.state && this.props.location.state.isReadOnly?this.props.location.state.isReadOnly:false
+            ,profileEmail : this.props.location && this.props.location.state && this.props.location.state.profileEmail?this.props.location.state.profileEmail:""
         }
+        console.log("constructor : ",this.state.isReadOnly);
+        console.log("constructor : ",this.state.profileEmail);
     }
 
     componentWillMount(){
         debugger;
         axios.defaults.withCredentials = true;
         var data;
-        if(this.state.email){
-            data = {
-                userId:this.state.email
+        if(this.state.isReadOnly){
+            data ={
+                userId : this.state.profileEmail
                 ,type : this.state.type
             }
+        }else {
+            if(cookie.load('cookie')){
+                data = {
+                    userId :""
+                    ,token:cookie.load('cookie')
+                    ,type : this.state.type
+                }
+            }   
         }
-        axios.post('http://localhost:3001/profile',data)
+        axios.post(serverUrl+'profile',data)
                 .then((response) => {
                     debugger;
                 //update the state with the response data
@@ -118,18 +131,19 @@ class Profile extends Component {
                                     major = {this.state.major}
                                     cumulativeGPA = {this.state.cumulativeGPA}
                                     email = {this.state.email}
-                                    profilePicPath = {this.state.profilePicPath} />
-                            <Skills skillsData={this.state.skillsData} email = {this.state.email}/>
-                            <Documents/>
-                            <Personalinfo emailId = {this.state.emailId} gender = {this.state.gender}/>
+                                    profilePicPath = {this.state.profilePicPath}
+                                    isReadOnly = {this.state.isReadOnly} />
+                            <Skills skillsData={this.state.skillsData} email = {this.state.email} isReadOnly = {this.state.isReadOnly}/>
+                            <Documents isReadOnly = {this.state.isReadOnly}/>
+                            <Personalinfo emailId = {this.state.emailId} gender = {this.state.gender} isReadOnly = {this.state.isReadOnly}/>
                         </div>
                         <div className="col-md-8">
-                            <MyJourney myJourney = {this.state.myJourney} email = {this.state.email}/>
+                            <MyJourney myJourney = {this.state.myJourney} email = {this.state.email} isReadOnly = {this.state.isReadOnly}/>
                             <Education schoolName = {this.state.schoolName} startDate = {this.state.startDate}
                                         endDate = {this.state.endDate} major = {this.state.major}
                                         cumulativeGPA = {this.state.cumulativeGPA}
-                                        email = {this.state.email} />
-                            <Experience/>
+                                        email = {this.state.email}  isReadOnly = {this.state.isReadOnly}/>
+                            <Experience isReadOnly = {this.state.isReadOnly}/>
                         </div>
                     </div>
                 </div> 

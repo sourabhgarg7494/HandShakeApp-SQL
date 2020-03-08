@@ -1,62 +1,18 @@
 import React, { Component } from 'react';
-import '../../App.css';
+import '../../../App.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { Link } from 'react-router-dom';
-import { serverUrl } from "../../config";
+import { serverUrl } from "../../../config";
 
 
 import Dropdown from 'react-dropdown';
 import 'react-dropdown/style.css';
 
 
-const monthOptions = ['-Select-'
-                ,'Jan'
-                ,'Feb'
-                ,'Mar'
-                ,'Apr'
-                ,'May'
-                ,'Jun'
-                ,'Jul'
-                ,'Aug'
-                ,'Sep'
-                ,'Oct'
-                ,'Nov'
-                ,'Dec'
-            ]
-
-const yearOptions = ['-Select-'
-                ,'2020'
-                ,'2021'
-                ,'2022'
-                ,'2023'
-                ,'2024'
-                ,'2025'
-                ,'2026'
-                ,'2027'
-                ,'2028'
-                ,'2029'
-                ,'2030'
-                ,'2031'
-            ]
 //Define a Sign up Component
-class SignUp extends Component {
-
-    // state = {
-    //     School: "",
-    //     FirstName: "",
-    //     LastName: "",
-    //     EmailAddress: "",
-    //     Major: "",
-    //     GradMonth: "",
-    //     GradYear: "",
-    //     Password: "",
-    //     Schools : [{ key: "", value : "-Select-"}],
-    //     isPasswordConfirmed : true,
-    //     authFlag: null
-    //     ,error : null
-    // };
+class CompanySignUp extends Component {
 
     //call the constructor method
     constructor(props) {
@@ -65,15 +21,20 @@ class SignUp extends Component {
         //maintain the state required for this component
         this.state = {
             School: null,
-            FirstName: "",
-            LastName: "",
+            CompanyName: "",
+            Address: "",
             EmailAddress: "",
-            Major: "",
-            GradMonth: "",
-            GradYear: "",
+            Description: "",
+            Phone: "",
             Password: "",
-            Schools : [{ key: " ", value : "-Select-"}],
-            allMajors : [{ key: " ", value : "-Select-"}],
+            Countries : [{ key: " ", value : "-Select-"}],
+            selectedCountry : "",
+            States : [{ key: " ",country: "", value : "-Select-"}],
+            selectedState : "",
+            filteredStates : [{ key: " ",country: "",  value : "-Select-"}],
+            Cities : [{ key: " ",cityState: "", value : "-Select-"}],
+            selectedCity : "",
+            filteredCities : [{ key: " ",cityState: "", value : "-Select-"}],
             confirmPassword: "",
             authFlag: null
             ,error : null
@@ -83,34 +44,40 @@ class SignUp extends Component {
         this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
         this.submitCreate = this.submitCreate.bind(this);
 
-        this.userFirstnameChangeHandler = this.userFirstnameChangeHandler.bind(this);
-        this.userLastnameChangeHandler = this.userLastnameChangeHandler.bind(this);
+        this.userCompanyNameChangeHandler = this.userCompanyNameChangeHandler.bind(this);
+        this.userDescriptionChangeHandler = this.userDescriptionChangeHandler.bind(this);
+        this.AddressChangeHandler = this.AddressChangeHandler.bind(this);
         this.userEmailAddressChangeHandler = this.userEmailAddressChangeHandler.bind(this);
+        this.phoneChangeHandler = this.phoneChangeHandler.bind(this);
+        
 
-        this.onSchoolSelect = this.onSchoolSelect.bind(this);
-        this.onGradMonthSelect = this.onGradMonthSelect.bind(this);
-        this.onGradYearSelect = this.onGradYearSelect.bind(this);
-        this.onMajorSelect = this.onMajorSelect.bind(this);
+        this.onCountrySelect = this.onCountrySelect.bind(this);
+        this.onStateSelect = this.onStateSelect.bind(this);
+        this.onCitySelect = this.onCitySelect.bind(this);
 
         this.confirmpasswordChangeHandler = this.confirmpasswordChangeHandler.bind(this);
     }
 
     componentDidMount(){
         console.log("did mount");
-        axios.get('http://localhost:3001/signup')
+        axios.get('http://localhost:3001/companySignUp')
                 .then((response) => {
                     debugger;
                 //update the state with the response data
                 console.log("data " + response.data);
-                let allSchools  = response.data[0].map(school => {
-                    return {key : school.Name, value : school.Name }
+                let allCountries  = response.data[0].map(country => {
+                    return {key : country.Name, value : country.Name}
                 });
-                let majors  = response.data[1].map(major => {
-                    return {key : major.Name, value : major.Name }
+                let allStates  = response.data[1].map(st => {
+                    return {key : st.Name,country : st.country,  value : st.Name }
+                });
+                let allCities = response.data[2].map(city => {
+                    return {key : city.Name, cityState : city.cityState, value : city.Name }
                 });
                 this.setState({
-                    Schools : this.state.Schools.concat(allSchools)
-                    ,allMajors : this.state.allMajors.concat(majors)
+                    Countries : this.state.Countries.concat(allCountries)
+                    ,States : this.state.Countries.concat(allStates)
+                    ,Cities : this.state.Cities.concat(allCities)
                 });
             });
     }
@@ -120,42 +87,49 @@ class SignUp extends Component {
         })
     }
 
-    onSchoolSelect(e){
+    onCountrySelect(e){
+        this.setState({
+            selectedCountry : e.target.value===" "? "" : e.target.value
+            ,filteredStates : this.state.States.filter(st => st.country == e.target.value===" "? "" : e.target.value) 
+        });
+    }
+
+    onStateSelect(e){
         debugger;
         this.setState({
-            School : e.target.value===" "? "" : e.target.value
+            selectedState : e.target.value ===" "? "" : e.target.value
+            ,filteredCities : this.state.Cities.filter(city => city.state == e.target.value === " "?"" : e.target.value)
         });
     }
 
-    onGradMonthSelect(e){
+    onCitySelect(e){
+        debugger;
         this.setState({
-            GradMonth : e.target.value ===" "? "" : e.target.value
-        });
-        console.log(this.state.GradMonth);
+            selectedCity : e.target.value === " " ? "": e.target.value
+        })
     }
-
-    onGradYearSelect(e){
+    
+    AddressChangeHandler = (e) =>{
         this.setState({
-            GradYear : e.target.value ===" "? "" : e.target.value
-        });
-        console.log(this.state.GradYear);
-    }
-
-    onMajorSelect(e){
-        this.setState({
-            Major : e.target.value === " " ? "": e.target.value
+            Address: e.target.value
         })
     }
 
-    userFirstnameChangeHandler = (e) =>{
+    userCompanyNameChangeHandler = (e) =>{
         this.setState({
-            FirstName: e.target.value
+            CompanyName: e.target.value
         })
     }
 
-    userLastnameChangeHandler = (e) =>{
+    userDescriptionChangeHandler = (e) =>{
         this.setState({
-            LastName: e.target.value
+            Description: e.target.value
+        })
+    }
+
+    phoneChangeHandler = (e) =>{
+        this.setState({
+            Phone: e.target.value
         })
     }
 
@@ -168,6 +142,7 @@ class SignUp extends Component {
     confirmpasswordChangeHandler = (e) =>{
         this.setState({
             confirmPassword : e.target.value
+            ,error : this.state.Password !== e.target.value ? <label className="error">Password did not match!!</label> : null
         })
     }
 
@@ -178,47 +153,59 @@ class SignUp extends Component {
     }
     //submit Create handler to send a request to the node backend
     submitCreate = (e) => {
+        //prevent page from refresh
         e.preventDefault();
         var isValidate = true;
-        if(this.state.School === ""){
+        if(this.state.CompanyName === ""){
             isValidate = false;
             this.setState({
-                error: <label className="error">School must be selected!!</label>
+                error: <label className="error">Company name must be entered!!</label>
             })
-        } else if(this.state.FirstName === ""){
-            isValidate = false;
-            this.setState({
-                error: <label className="error">First name not entered!!</label>
-            })
-        }
-        else if(this.state.LastName === ""){
-            isValidate = false;
-            this.setState({
-                error: <label className="error">Last name not entered!!</label>
-            })
-        }
+        } 
+        //else if(this.state.FirstName === ""){
+        //     this.setState({
+        //         error: <label className="error">First name not entered!!</label>
+        //     })
+        // }
+        // else if(this.state.LastName === ""){
+        //     this.setState({
+        //         error: <label className="error">Last name not entered!!</label>
+        //     })
+        // }
         else if(this.state.EmailAddress === ""){
             isValidate = false;
             this.setState({
                 error: <label className="error">Email Address not entered!!</label>
             })
         }
-        else if(this.state.Major === ""){
+        else if(this.state.selectedCountry === ""){
             isValidate = false;
             this.setState({
-                error: <label className="error">Major must be selected!!</label>
+                error: <label className="error">Country must be selected!!</label>
             })
         }
-        else if(this.state.GradMonth === ""){
+        else if(this.state.selectedState === ""){
             isValidate = false;
             this.setState({
-                error: <label className="error">Grad Month must be selected!!</label>
+                error: <label className="error">State must be selected!!</label>
             })
         }
-        else if(this.state.GradYear === ""){
+        else if(this.state.selectedCity === ""){
             isValidate = false;
             this.setState({
-                error: <label className="error">Grad Year must be selected!!</label>
+                error: <label className="error">City must be selected!!</label>
+            })
+        }
+        else if(this.state.Address === ""){
+            isValidate = false;
+            this.setState({
+                error: <label className="error">Address must be entered!!</label>
+            })
+        }
+        else if(this.state.Description === ""){
+            isValidate = false;
+            this.setState({
+                error: <label className="error">Description must be entered!!</label>
             })
         }
         else if(this.state.Password === ""){
@@ -234,22 +221,23 @@ class SignUp extends Component {
             })
         }
         debugger;
-        if(!this.state.error){
+        if(isValidate){
             const data = {
-                School : this.state.School,
-                FirstName: this.state.FirstName,
-                LastName: this.state.LastName,
+                CompanyName : this.state.CompanyName,
                 EmailAddress: this.state.EmailAddress,
-                Major: this.state.Major,
-                GradMonth: this.state.GradMonth,
-                GradYear: this.state.GradYear,
+                Country: this.state.selectedCountry,
+                State: this.state.selectedState,
+                City: this.state.selectedCity,
+                Address: this.state.Address,
+                Phone: this.state.Phone,
+                Description : this.state.Description,
                 Password: this.state.Password
             }
             console.log(data);
             //set the with credentials to true
             axios.defaults.withCredentials = true;
             //make a post request with the user data 
-            axios.post('http://localhost:3001/Signup', data)
+            axios.post('http://localhost:3001/companySignUp', data)
                 .then(response => {
                     console.log("Response : ", response);
                     console.log("Status Code : ", response.status);
@@ -283,59 +271,67 @@ class SignUp extends Component {
         let signup = null;
         if (!this.state.authFlag) {
             signup = (<div className="main-div">
-                    <div className="col-md-12">  
+                    {/* <div className="col-md-12">  
                         <label >School</label>
                         <div className="form-group">
-                            {/* <Dropdown options={schoolOptions} onChange={this.onSchoolSelect} value={defaultSchoolOption} placeholder="Select a school" /> */}
                             <select className="form-control" value = {this.state.School} onChange={this.onSchoolSelect}>
                                 {this.state.Schools.map((school) => <option className="Dropdown-menu" key ={school.key} value={school.key}>{school.value}</option>)}
                             </select>
                         </div>
-                    </div> 
-                    <div className="col-md-6">
-                        <label >First Name</label>
+                    </div>  */}
+                    <div className="col-md-12">
+                        <label >Company Name</label>
                         <div className="form-group">
-                            <input onChange={this.userFirstnameChangeHandler} type="text" className="form-control" name="txtFirstName" placeholder="First Name" />
-                        </div>
-                    </div>   
-                    <div className="col-md-6">
-                        <label >Last Name</label>
-                        <div className="form-group">
-                            <input onChange={this.userLastnameChangeHandler} type="text" className="form-control" name="txtLastName" placeholder="Last Name" />
+                            <input onChange={this.userCompanyNameChangeHandler} type="text" className="form-control" name="txtCompanyName" placeholder="Company Name" />
                         </div>
                     </div>
                     <div className="col-md-12">
                         <label>Email Address</label>
-                        <div className="form-hint">Please use your school email</div>
+                        <div className="form-hint">Please use your work email address</div>
                         <div className="form-group">
                             <input autoComplete="off" onChange={this.userEmailAddressChangeHandler} type="text" className="form-control" name="txtEmail" placeholder="Email Address" />
                         </div>
                     </div>
                     <div className="col-md-12">
-                        <label>Major</label> 
+                        <label>Country</label> 
                         <div className="form-group">
-                            <select className="form-control" value = {this.state.Major} onChange={this.onMajorSelect}>
-                                {this.state.allMajors.map((major) => <option className="Dropdown-menu" key ={major.key} value={major.key}>{major.value}</option>)}
-                            </select>
-                            {/* <Dropdown options={majorOptions} onChange={this.onMajorSelect} value={defaultMajorOptions} placeholder="Select a major" /> */}
-                        </div>
-                    </div>
-                    <div className="col-md-6">
-                        <label>Grad Month</label>
-                        <div className="form-group">
-                            {/* <Dropdown options={monthOptions} onChange={this.onGradMonthSelect} value={defaultmonthOptions} placeholder="Select Grad Month" /> */}
-                            <select className="form-control" value = {this.state.GradMonth} onChange={this.onGradMonthSelect}>
-                                {monthOptions.map((month) => <option className="Dropdown-menu" key ={month} value={month==="-Select-"?" ":month}>{month}</option>)}
+                            <select className="form-control" value = {this.state.selectedCountry} onChange={this.onCountrySelect}>
+                                {this.state.Countries.map((country) => <option className="Dropdown-menu" key ={country.key} value={country.key}>{country.value}</option>)}
                             </select>
                         </div>
                     </div>
                     <div className="col-md-6">
-                        <label> Grad Year </label>
+                        <label>State</label>
                         <div className="form-group">
-                            {/* <Dropdown options={yearOptions} onChange={this.onGradYearSelect} value={defaulYearOptions} placeholder="Select Grad Year" /> */}
-                            <select className="form-control" value = {this.state.GradYear} onChange={this.onGradYearSelect}>
-                                {yearOptions.map((year) => <option className="Dropdown-menu" key ={year} value={year==="-Select-"?" ":year}>{year}</option>)}
+                            <select className="form-control" value = {this.state.selectedState} onChange={this.onStateSelect}>
+                                {this.state.filteredStates.map((st) => <option className="Dropdown-menu" key ={st.key} value={st.key}>{st.value}</option>)}
                             </select>
+                        </div>
+                    </div>
+                    <div className="col-md-6">
+                        <label> City </label>
+                        <div className="form-group">
+                            <select className="form-control"  value = {this.state.selectedCity} onChange={this.onCitySelect}>
+                                {this.state.filteredCities.map((city) => <option className="Dropdown-menu" value={city.key}>{city.value}</option>)}
+                            </select>
+                        </div>
+                    </div>
+                    <div className="col-md-12">
+                        <label >Address</label>
+                        <div className="form-group">
+                            <input onChange={this.AddressChangeHandler} type="text" className="form-control" name="txtAddress" placeholder="Address" />
+                        </div>
+                    </div>
+                    <div className="col-md-12">
+                        <label >Phone</label>
+                        <div className="form-group">
+                            <input onChange={this.phoneChangeHandler} type="text" className="form-control" name="txtPhone" placeholder="Phone No." />
+                        </div>
+                    </div>
+                    <div className="col-md-12">
+                        <label >Description</label>
+                        <div className="form-group">
+                            <input onChange={this.userDescriptionChangeHandler} type="text" className="form-control" name="txtDescription" placeholder="Description" />
                         </div>
                     </div>
                     <div className="col-md-6">
@@ -362,7 +358,7 @@ class SignUp extends Component {
                     </div>
                 </div>) ;
         }else{
-            signup = <div className="main-div"><label>Student Account Created!! Login to Continue.</label></div>
+            signup = <div className="main-div"><label>Company Account Created!! Login to Continue.</label></div>
         }
         return (
             <div>
@@ -374,7 +370,7 @@ class SignUp extends Component {
                             <p className="subtitle">Discover jobs and internships based on your interests.</p>
                         </div>
                         <div data-bind="invisible: prompt_for_linked_account_password">
-                            <Link to="/Companysignup">Are you an employer? Create an account here.</Link>
+                            <Link to="/SignUp">Are you a Student? Create an account here.</Link>
                         </div>
                     </div>
                     <div className="col-md-6 content margin-top">
@@ -385,5 +381,5 @@ class SignUp extends Component {
         )
     }
 }
-//export SignUp Component
-export default SignUp;
+//export CompanySignUp Component
+export default CompanySignUp;

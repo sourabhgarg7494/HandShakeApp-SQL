@@ -36,6 +36,7 @@ class Skills extends Component {
             var data = {
                 skill: this.state.skill
                 , userId: this.props.email
+                ,token :cookie.load('cookie')
                 , type : "AddUserSkill"
             };
             axios.post(serverUrl + 'updateSkill', data)
@@ -93,6 +94,7 @@ class Skills extends Component {
             var data = {
                 skill: deletedSkill
                 , userId: this.props.email
+                , token: cookie.load('cookie')
                 , type : "DeleteUserSkill"
             };
             axios.post(serverUrl + 'updateSkill', data)
@@ -124,6 +126,13 @@ class Skills extends Component {
     // }
 
     render() {
+
+        var editButton = null;
+        if(!this.props.isReadOnly){
+            editButton = (<button type="button" className="saveButton" onClick={this.editSkillsData}>
+                            <span>Edit</span>
+                         </button>)
+        }
 
         var allSkills;
         debugger;
@@ -177,9 +186,7 @@ class Skills extends Component {
             buttons = (<div className ="row"><div className="col-md-6">
                 <div className="divSaveButton">
                     <div className="divButtonWrapper">
-                        <button type="button" className="saveButton" onClick={this.editSkillsData}>
-                            <span>Edit</span>
-                        </button>
+                        {editButton}
                     </div>
                 </div>
             </div></div>);

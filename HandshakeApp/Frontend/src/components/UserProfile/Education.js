@@ -45,7 +45,6 @@ class Education extends Component {
         this.setState({
             isEditEnabled : true
         })
-        console.log(this.state.isValueUpdated);
     }
 
     cancelClick(e) {
@@ -63,6 +62,7 @@ class Education extends Component {
             ,type : this.state.type
             ,schoolName : this.state.schoolName
             ,major : this.state.major
+            ,token : cookie.load('cookie')
         }
         axios.post('http://localhost:3001/profile',data)
                 .then((response) => {
@@ -84,6 +84,12 @@ class Education extends Component {
     }
 
     render() {
+        var editButton = null;
+        if(!this.props.isReadOnly){
+            editButton = (<button type="button" className="cancelButton" onClick={this.editClick} >
+                            <span>Edit</span>
+                        </button>)
+        }
         var eduData;
         if (!this.state.isEditEnabled) {
             eduData = (<div className="row">
@@ -102,9 +108,7 @@ class Education extends Component {
                             </span>
                             </div>
                             <div className="col-md-2">
-                            <button type="button" className="cancelButton" onClick={this.editClick} >
-                                <span>Edit</span>
-                            </button>
+                                {editButton}
                             </div>
                         </div>);
         }else if(this.state.isValueUpdated) {
@@ -124,9 +128,7 @@ class Education extends Component {
                             </span>
                             </div>
                             <div className="col-md-2">
-                            <button type="button" className="cancelButton" onClick={this.editClick} >
-                                <span>Edit</span>
-                            </button>
+                            {editButton}
                             </div>
                         </div>);
         }else {

@@ -7,6 +7,11 @@ import Create from './Create/Create';
 import Navbar from './LandingPage/Navbar';
 import SignUp from './Signup/SignUp';
 import Profile from './UserProfile/Profile';
+import CompanySignUp from './Company/Signup/CompanySignUp';
+import StudentSearch from './StudentSearch/StudentSearch';
+import CompanyProfile from './Company/Profile/CompanyProfile';
+import JobsPostings from './Jobs/JobsPostings';
+import Applications from './Jobs/Applications';
 
 
 //Create a Main Component
@@ -22,6 +27,12 @@ class Main extends Component {
                 <Route path="/create" component={Create}/>
                 <Route path="/Signup" component={SignUp}/>
                 <Route path="/Profile" component={Profile}/>
+                <Route path="/StudentProfile" component={Profile}/>
+                <Route path="/Companysignup" component={CompanySignUp}/>
+                <Route path="/CompanyProfile" component={CompanyProfile}/>
+                <Route path="/StudentJobPostings" component={JobsPostings}/>
+                <Route path="/StudentApplications" component={Applications}/>
+                <Route path="/StudentSearch" component={StudentSearch}/>
             </div>
         )
     }

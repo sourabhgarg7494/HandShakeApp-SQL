@@ -5,7 +5,6 @@ import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
 import { serverUrl } from "../../config";
 
-let cardData = null;
 class Overview extends Component {
     constructor(props) {
         super(props);
@@ -50,6 +49,7 @@ class Overview extends Component {
         const d = new FormData();
         d.append("file",this.state.profilePic);
         d.append("userId",this.props.email);
+        d.append("token", cookie.load('cookie'));
         console.log(d.values());
         this.setState({
             type : "uploadProfilePic"
@@ -57,7 +57,7 @@ class Overview extends Component {
         axios.post(serverUrl+'uploadProfilePic',d)
         .then((response) => {
             console.log(response);
-            if(response.status === 200 && response.data.file != ""){
+            if(response.status === 200 && response.data.file !== ""){
                 this.setState({
                     isProfilePicUploadActivated : false
                     ,profilePicPath : response.data.file
@@ -132,7 +132,22 @@ class Overview extends Component {
     }
 
     render() {
-        debugger;
+
+        var editButton = null;
+        var profilePicDisabled = '';
+        if(!this.props.isReadOnly){
+            editButton = (<button className="editButton" onClick={this.editClick}>
+                            <svg className="svgForEdit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+                                <path fill="currentColor" d="M493.26 56.26l-37.51-37.51C443.25 6.25 426.87 0 410.49 0s-32.76 6.25-45.25 18.74l-74.49 74.49L256 127.98 12.85 371.12.15 485.34C-1.45 499.72 9.88 512 23.95 512c.89 0 1.79-.05 2.69-.15l114.14-12.61L384.02 256l34.74-34.74 74.49-74.49c25-25 25-65.52.01-90.51zM118.75 453.39l-67.58 7.46 7.53-67.69 231.24-231.24 31.02-31.02 60.14 60.14-31.02 31.02-231.33 231.33zm340.56-340.57l-44.28 44.28-60.13-60.14 44.28-44.28c4.08-4.08 8.84-4.69 11.31-4.69s7.24.61 11.31 4.69l37.51 37.51c6.24 6.25 6.24 16.4 0 22.63z">
+                                </path>
+                            </svg>
+                            <span></span>
+                        </button>)
+            profilePicDisabled = ''
+        }else{
+            profilePicDisabled = 'true'
+        }
+
         if(this.props.profilePicPath){
             this.isProfilePicUploaded = true;
         }
@@ -171,7 +186,7 @@ class Overview extends Component {
         
         if(!this.isProfilePicUploaded){
             profileMainButton = (
-                <button className="profilePicButton" type="button" onClick={this.onProfileButtonClick}>
+                <button className="profilePicButton" type="button" disabled={profilePicDisabled} onClick={this.onProfileButtonClick}>
                     <div className="divInsideButton">
                         <svg data-prefix="fas" data-icon="camera" className="svgInsideProfilePic" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
                             <path fill="currentColor" d="M512 144v288c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V144c0-26.5 21.5-48 48-48h88l12.3-32.9c7-18.7 24.9-31.1 44.9-31.1h125.5c20 0 37.9 12.4 44.9 31.1L376 96h88c26.5 0 48 21.5 48 48zM376 288c0-66.2-53.8-120-120-120s-120 53.8-120 120 53.8 120 120 120 120-53.8 120-120zm-32 0c0 48.5-39.5 88-88 88s-88-39.5-88-88 39.5-88 88-88 88 39.5 88 88z">
@@ -183,7 +198,7 @@ class Overview extends Component {
                     </div>
                 </button>);
         } else if(this.isProfilePicUploaded){
-            profileMainButton =(<button className="profilePicButton" type="button" onClick={this.onProfileButtonClick}>
+            profileMainButton =(<button className="profilePicButton" disabled={profilePicDisabled} type="button" onClick={this.onProfileButtonClick}>
                                     <img src={!this.state.profilePicPath?this.props.profilePicPath:this.state.profilePicPath} alt={this.state.profilePicPath} style={{width: '100%'}}></img>
                                 </button>);
         }
@@ -318,13 +333,7 @@ class Overview extends Component {
                             </div>
                         </div>
                         <div className="editButtonDiv">
-                            <button className="editButton" onClick={this.editClick}>
-                                <svg className="svgForEdit" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                                    <path fill="currentColor" d="M493.26 56.26l-37.51-37.51C443.25 6.25 426.87 0 410.49 0s-32.76 6.25-45.25 18.74l-74.49 74.49L256 127.98 12.85 371.12.15 485.34C-1.45 499.72 9.88 512 23.95 512c.89 0 1.79-.05 2.69-.15l114.14-12.61L384.02 256l34.74-34.74 74.49-74.49c25-25 25-65.52.01-90.51zM118.75 453.39l-67.58 7.46 7.53-67.69 231.24-231.24 31.02-31.02 60.14 60.14-31.02 31.02-231.33 231.33zm340.56-340.57l-44.28 44.28-60.13-60.14 44.28-44.28c4.08-4.08 8.84-4.69 11.31-4.69s7.24.61 11.31 4.69l37.51 37.51c6.24 6.25 6.24 16.4 0 22.63z">
-                                    </path>
-                                </svg>
-                                <span></span>
-                            </button>
+                            {editButton}
                         </div>
                         <div className="mainOverViewCardData">
                             <div >

@@ -12,6 +12,12 @@ class Personalinfo extends Component {
     }
 
     render(){
+        var editButton = null;
+        if(!this.props.isReadOnly){
+            editButton = (<button type="button" className="cancelButton" onClick={this.editClick} >
+                            <span>Edit</span>
+                        </button>)
+        }
         return(
             <div className="dataCard">
                 <div className="itemsmain">

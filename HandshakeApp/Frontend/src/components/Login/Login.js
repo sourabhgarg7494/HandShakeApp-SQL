@@ -86,8 +86,23 @@ class Login extends Component {
     render() {
         //redirect based on successful login
         let redirectVar = null;
+        debugger;
         if (cookie.load('cookie')) {
-            redirectVar = <Redirect to="/Profile" />
+            var userrole = cookie.load('userrole');
+            if(userrole === "Student"){
+                // redirectVar = <Redirect to={{
+                //     pathname: "/Profile",
+                //     state: { isReadOnly: false, profileEmail : "" }
+                // }}  />
+                redirectVar = <Redirect to={{
+                    pathname: "/StudentJobPostings"
+                }}  />
+            } else if(userrole === "Company"){
+                redirectVar = <Redirect to={{
+                    pathname: "/CompanyProfile",
+                    state: { isReadOnly: false, profileEmail : "" }
+                }}  />
+            }
         }
 
         let error = null;

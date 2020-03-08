@@ -1,8 +1,11 @@
+DROP PROCEDURE GetSchoolMaster
 DELIMITER //
 
 CREATE PROCEDURE GetSchoolMaster ()
 BEGIN
-	SELECT Id,Name FROM SchoolMaster;
+	SELECT Name FROM SchoolMaster;
+    
+    SELECT Name FROM MAJORMaster;
 END //
 
 DELIMITER ;
