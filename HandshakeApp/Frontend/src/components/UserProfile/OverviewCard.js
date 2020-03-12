@@ -48,7 +48,7 @@ class Overview extends Component {
         ev.preventDefault();  
         const d = new FormData();
         d.append("file",this.state.profilePic);
-        d.append("userId",this.props.email);
+        //d.append("userId",this.props.email);
         d.append("token", cookie.load('cookie'));
         console.log(d.values());
         this.setState({

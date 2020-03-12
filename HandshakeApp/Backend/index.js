@@ -138,6 +138,115 @@ async function getSignUpMasterData(){
     return results;
 }
 
+async function getApplicationMasterData(data){ 
+    var query = "CALL GetApplicationMasterData(?)";
+    var con = await mysql.createConnection(databaseConString);
+    var UserId = getUserIdFromToken(data.token);
+    console.log("inside con");
+    var [results, fields] = await con.query(query,UserId);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+
+
+async function getUploadedResumeList(UserId){ 
+    var query = "CALL getUploadedResumeList(?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var [results, fields] = await con.query(query, UserId);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+
+async function getMasterDataJobPosting(){ 
+    var query = "CALL getMasterDataJobPosting()";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var [results, fields] = await con.query(query);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+async function getEventListings(data){ 
+    var query = "CALL getEventListings(?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query,[data.eventName,UserId]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+async function getEventDetails(data){ 
+    var query = "CALL getEventDetails(?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query,[data.eventId,UserId]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+async function registerForEvent(data){ 
+    var query = "CALL registerForEvent(?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query,[data.eventId,UserId]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+async function leaveEvent(data){ 
+    var query = "CALL leaveEvent(?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query,[data.eventId,UserId]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+async function getJobPosting(data){ 
+    var query = "CALL getJobPostings(?,?,?,?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query,[data.city,data.jobTitle,data.company,data.jobCategoryFilter,UserId]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+async function getJobDetails(data){ 
+    var query = "CALL getJobDetails(?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query,[data.jobId,UserId]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
 async function getCompanySignUpMasterData(){ 
     var query = "CALL GetCompanySignUpMaster()";
     var con = await mysql.createConnection(databaseConString);
@@ -215,6 +324,17 @@ async function UpdateProfilePicLocation(userId,profilePicPath){
     return results;
 }
 
+async function UpdateResumeLocation(userId,resumePath,originalName){ 
+    var query = "CALL UpdateResumePath(?,?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    var [results, fields] = await con.query(query, [userId,resumePath,originalName]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
 async function addUserSkill(data){ 
     var query = "CALL addUserSkill(?,?)";
     var con = await mysql.createConnection(databaseConString);
@@ -227,12 +347,37 @@ async function addUserSkill(data){
     return results;
 }
 
+async function applyForJob(data){ 
+    var query = "CALL applyForJob(?,?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    console.log("inside con");
+    let UserId = getUserIdFromToken(data.token);
+    var [results, fields] = await con.query(query, [UserId,data.JobId,data.selectedResume]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
 async function getStudentFilterData(data){ 
     var query = "CALL GetStudentFilterData(?,?,?,?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     let UserId = getUserIdFromToken(data.token);
     console.log("inside con");
     var [results, fields] = await con.query(query, [data.studentName,data.schoolName,data.major,data.startIndex,data.rowCount,UserId]);
+
+    await con.end();
+    console.log(results);
+    return results;
+}
+
+
+async function getApplicationData(data){ 
+    var query = "CALL GetApplicationData(?,?)";
+    var con = await mysql.createConnection(databaseConString);
+    let UserId = getUserIdFromToken(data.token);
+    console.log("inside con");
+    var [results, fields] = await con.query(query, [UserId,data.jobStatusFilter]);
 
     await con.end();
     console.log(results);
@@ -375,7 +520,7 @@ app.get('/home', function(req,res){
 })
 
 app.get('/Signup', async function(req,res){
-    console.log("Inside signup Login");    
+    console.log("Inside signup");    
     results = await getSignUpMasterData();
 
     res.writeHead(200,{
@@ -385,10 +530,35 @@ app.get('/Signup', async function(req,res){
     res.end(JSON.stringify(results));
 })
 
+app.post('/getUploadedResumeList', async function(req,res){
+    console.log("Inside get Resume List"); 
+    
+    let UserId = getUserIdFromToken(req.body.token);
+    results = await getUploadedResumeList(UserId);
+
+    res.writeHead(200,{
+        'Content-Type' : 'application/json'
+    });
+    console.log("ResumeList : ",JSON.stringify(results));
+    res.end(JSON.stringify(results));
+})
+
+
 
 app.get('/companySignUp', async function(req,res){ 
     console.log("Inside Company signup Login");    
     results = await getCompanySignUpMasterData();
+
+    res.writeHead(200,{
+        'Content-Type' : 'application/json'
+    });
+    console.log("Alldata: ",JSON.stringify(results));
+    res.end(JSON.stringify(results));
+})
+
+app.post('/application', async function(req,res){ 
+    console.log("Inside Company signup Login");    
+    results = await getApplicationMasterData(req.body);
 
     res.writeHead(200,{
         'Content-Type' : 'application/json'
@@ -413,6 +583,56 @@ app.post('/uploadProfilePic', async function(req,res){
         }
     });
 
+})
+
+app.post('/uploadResume', async function(req,res){
+    console.log("inside resume pic");
+    let resume = req.files.file;
+    let [fileExtension] = resume.name.split('.').splice(-1);
+    let UserId = getUserIdFromToken(req.body.token);
+    let newFilename = UserId+"-Resume-"+Date.now()+"."+fileExtension;
+
+    resume.mv(`${uploadPath}/${newFilename}`, async function(err) {
+        if (err) {
+            return res.status(500).send(err);
+        }else{
+            results = await UpdateResumeLocation(UserId,newFilename,resume.name);
+            console.log("Uploaded Resume : ",JSON.stringify(results));
+            res.json({file: results[0][0].ResumePath
+                    , ResumeId : results[0][0].Id
+                    , FileName : results[0][0].FileName});
+        }
+    });
+
+})
+
+app.post('/applyForJob',async function(req, res){
+    console.log("inside applyForJob skill");
+    console.log(req);
+    let results = await applyForJob(req.body);
+
+    res.writeHead(200,{  
+        'Content-Type' : 'application/json'
+    });
+    //console.log("SchoolMaster : ",JSON.stringify(results));
+    res.end(JSON.stringify(results)); 
+
+})
+
+app.post('/jobPosting', async function(req,res){
+    console.log("Inside jobPosting post");   
+    var results=null;
+    if(req.body.type === "jobListLoad"){
+        results = await getJobPosting(req.body);
+    }
+    else if(req.body.type === "fetchJobDetails")
+        results = await getJobDetails(req.body);
+
+    res.writeHead(200,{
+        'Content-Type' : 'application/json'
+    });
+    console.log("JobPosting : ",JSON.stringify(results));
+    res.end(JSON.stringify(results));
 })
 
 app.post('/updateSkill',async function(req, res){
@@ -446,11 +666,85 @@ app.get('/studentSearchFilter',async function(req, res){
 
 })
 
+app.get('/jobPosting', async function(req,res){
+    console.log("Inside jobPosting get");   
+    var results=null;
+    results = await getMasterDataJobPosting();
+
+    res.writeHead(200,{
+        'Content-Type' : 'application/json'
+    });
+    console.log("JobPosting : ",JSON.stringify(results));
+    res.end(JSON.stringify(results));
+})
+
+app.post('/eventListings', async function(req,res){
+    console.log("Inside Event Listings get");   
+    var results=null;
+    results = await getEventListings(req.body);
+
+    res.writeHead(200,{
+        'Content-Type' : 'application/json'
+    });
+    console.log("Event Listing : ",JSON.stringify(results));
+    res.end(JSON.stringify(results));
+})
+
+app.post('/eventDetails', async function(req,res){
+    console.log("Inside Event details get");   
+    var results=null;
+    results = await getEventDetails(req.body);
+
+    res.writeHead(200,{
+        'Content-Type' : 'application/json'
+    });
+    console.log("Event Details : ",JSON.stringify(results));
+    res.end(JSON.stringify(results));
+})
+
+app.post('/registerForEvent', async function(req,res){
+    console.log("Inside Register Event");   
+    var results=null;
+    results = await registerForEvent(req.body);
+
+    res.writeHead(200,{
+        'Content-Type' : 'application/json'
+    });
+    console.log("Event REgister : ",JSON.stringify(results));
+    res.end(JSON.stringify(results));
+})
+
+app.post('/leaveEvent', async function(req,res){
+    console.log("Inside Leave Event get");   
+    var results=null;
+    results = await leaveEvent(req.body);
+
+    res.writeHead(200,{
+        'Content-Type' : 'application/json'
+    });
+    console.log("Leave Event : ",JSON.stringify(results));
+    res.end(JSON.stringify(results));
+})
+
 app.post('/studentSearchFilter',async function(req, res){
     console.log("inside student Search Filter post");
     console.log(req);
 
     let results = await getStudentFilterData(req.body);
+
+    res.writeHead(200,{  
+        'Content-Type' : 'application/json'
+    });
+    console.log("Search REsults : ",JSON.stringify(results));
+    res.end(JSON.stringify(results)); 
+
+})
+
+app.post('/applicationsSearch',async function(req, res){
+    console.log("inside student Search Filter post");
+    console.log(req);
+
+    let results = await getApplicationData(req.body);
 
     res.writeHead(200,{  
         'Content-Type' : 'application/json'

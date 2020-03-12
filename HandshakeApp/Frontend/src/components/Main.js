@@ -12,6 +12,8 @@ import StudentSearch from './StudentSearch/StudentSearch';
 import CompanyProfile from './Company/Profile/CompanyProfile';
 import JobsPostings from './Jobs/JobsPostings';
 import Applications from './Jobs/Applications';
+import EventPostings from './Events/EventPostings';
+import RegisteredEvents from './Events/RegisteredEvents';
 
 
 //Create a Main Component
@@ -32,6 +34,8 @@ class Main extends Component {
                 <Route path="/CompanyProfile" component={CompanyProfile}/>
                 <Route path="/StudentJobPostings" component={JobsPostings}/>
                 <Route path="/StudentApplications" component={Applications}/>
+                <Route path="/StudentEventPostings" component={EventPostings}/>
+                <Route path="/StudentRegisteredEvents" component={RegisteredEvents}/>
                 <Route path="/StudentSearch" component={StudentSearch}/>
             </div>
         )

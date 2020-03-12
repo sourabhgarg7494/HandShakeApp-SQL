@@ -1,9 +1,11 @@
+
 Create table JobApplications(
 	Id BigInt auto_increment not NULL Primary key
     ,JobId Int
     ,StudentId BigInt
     ,StudentResumeId Int
-    ,ApplicationStatusId Int
+    ,ApplicationStatusId Int DEFAULT 1
+    ,ApplicationDate date
 );
 
 ALTER TABLE JobApplications

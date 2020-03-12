@@ -32,7 +32,7 @@ class Navbar extends Component {
                         <li><Link to="/Profile">Profile</Link></li>
                         <li><Link to="/StudentJobPostings">Jobs</Link></li>
                         <li><Link to="/StudentSearch">Students</Link></li>
-                        <li><Link to="#">Events</Link></li>
+                        <li><Link to="/StudentEventPostings">Events</Link></li>
                         <li><Link to="/" onClick = {this.handleLogout}><span className="glyphicon glyphicon-user"></span>Logout</Link></li>
                 </ul>)
             }else if(cookie.load('userrole')==="Company"){
