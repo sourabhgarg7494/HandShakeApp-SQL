@@ -25,7 +25,7 @@ left join citymaster cm on cm.Id = em.CityId
 inner join companydetails cd on cd.CompanyId = em.CompanyId
 WHERE em.EventName like CONCAT('%',EventName,'%');
 
-select * from eventData order by EventDateTime desc;
+select * from eventData order by EventDateTime ASC;
 
 if EXISTS (select * from eventData)
 THEN
@@ -63,7 +63,7 @@ left join citymaster cm on cm.Id = em.CityId
 inner join companydetails cd on cd.CompanyId = em.CompanyId
 left join eventeligiblemajormapping eemm on eemm.EventId = em.Id
 left join majormaster mm on mm.Id = eemm.EligibleMajorId
-WHERE em.Id = (select Id from eventData order By EventDateTime DESC LIMIT 1)
+WHERE em.Id = (select Id from eventData order By EventDateTime ASC LIMIT 1)
 GROUP BY em.Id
 	,em.EventName
     ,cd.CompanyName

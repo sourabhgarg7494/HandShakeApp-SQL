@@ -1,4 +1,4 @@
-DROP PROCEDURE GetApplicationData
+DROP PROCEDURE GetApplicationData 
 
 CALL GetApplicationData('test@sjsu.edu','')
 

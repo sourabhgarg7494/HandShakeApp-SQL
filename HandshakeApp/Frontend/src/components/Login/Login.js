@@ -99,7 +99,7 @@ class Login extends Component {
                 }}  />
             } else if(userrole === "Company"){
                 redirectVar = <Redirect to={{
-                    pathname: "/CompanyProfile",
+                    pathname: "/CompanyJobPostings",
                     state: { isReadOnly: false, profileEmail : "" }
                 }}  />
             }

@@ -1,5 +1,7 @@
 DROP PROCEDURE GetUserData
 
+CALL GetUserData('test@sjsu.edu')
+
 DELIMITER //
 
 CREATE PROCEDURE GetUserData (IN UserId varchar(500))
@@ -32,6 +34,26 @@ BEGIN
     INNER JOIN users usr on usr.Id = sedm.StudentId
     WHERE usr.EmailId = UserId;
     
+    select SM.Name from studentskillmapping SSM
+    INNER JOIN skillmaster SM ON SM.Id = SSM.SkillId
+    INNER JOIN users usr on usr.Id = SSM.StudentId
+    WHERE usr.EmailId = UserId;
+    
+    SELECT SEM.CompanyName
+		,SEM.Title
+        ,SEM.Address
+        ,SM.Name as State
+        ,CM.Name as City
+        ,Com.Name as Country
+        ,date_format(SEM.StartDate,'%b-%Y') as StartDate
+        ,date_format(SEM.EndDate,'%b-%Y') as EndDate
+        ,SEM.WorkDescription
+    FROM studentexperiencemapping SEM
+    LEFT JOIN StateMaster SM on SM.Id = SEM.StateId
+    LEFT JOIN CityMaster CM on CM.Id = SEM.CityId
+    LEFT JOIN CountryMaster Com on Com.Id = SEM.CountryId
+    INNER JOIN Users usr on usr.Id = SEM.StudentId
+    WHERE usr.EmailId = UserId;
     
 END; //
 

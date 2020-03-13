@@ -26,7 +26,7 @@ class Profile extends Component {
             ,cumulativeGPA : null
             ,skillsData : null
             ,documents : null
-            ,experianceData : null
+            ,experienceData : null
             ,myJourney : null
             ,emailId : null
             ,gender : null 
@@ -77,7 +77,8 @@ class Profile extends Component {
                     ,startDate : response.data[3][0].StartDate
                     ,endDate : response.data[3][0].EndDate
                     ,profilePicPath : response.data[2][0].ProfilePicturePath
-                   ,skillsData : response.data[4]
+                    ,skillsData : response.data[4]
+                    ,experienceData : response.data[5][0]
                 });
                 console.log(response);
             });
@@ -134,7 +135,7 @@ class Profile extends Component {
                                     profilePicPath = {this.state.profilePicPath}
                                     isReadOnly = {this.state.isReadOnly} />
                             <Skills skillsData={this.state.skillsData} email = {this.state.email} isReadOnly = {this.state.isReadOnly}/>
-                            <Documents isReadOnly = {this.state.isReadOnly}/>
+                            {/* <Documents isReadOnly = {this.state.isReadOnly}/> */}
                             <Personalinfo emailId = {this.state.emailId} gender = {this.state.gender} isReadOnly = {this.state.isReadOnly}/>
                         </div>
                         <div className="col-md-8">
@@ -143,7 +144,7 @@ class Profile extends Component {
                                         endDate = {this.state.endDate} major = {this.state.major}
                                         cumulativeGPA = {this.state.cumulativeGPA}
                                         email = {this.state.email}  isReadOnly = {this.state.isReadOnly}/>
-                            <Experience isReadOnly = {this.state.isReadOnly}/>
+                            <Experience experienceData = {this.state.experienceData} isReadOnly = {this.state.isReadOnly}/>
                         </div>
                     </div>
                 </div> 

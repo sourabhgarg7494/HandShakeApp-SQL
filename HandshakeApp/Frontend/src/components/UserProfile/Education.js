@@ -3,6 +3,7 @@ import '../../App.css';
 import axios from 'axios';
 import cookie from 'react-cookies';
 import { Redirect } from 'react-router';
+import {serverUrl} from '../../config'
 
 class Education extends Component {
     constructor(props) {
@@ -10,12 +11,15 @@ class Education extends Component {
         this.state = {
             isEditEnabled: false
             , isValueUpdated: false
-            , schoolName: null
-            , startDate: null
-            , endDate: null
-            , major: null
-            , cumulativeGPA: null
+            , schoolName: this.props.schoolName?this.props.schoolName:""
+            , startDate: this.props.startDate?this.props.startDate:""
+            , endDate: this.props.endDate?this.props.endDate:""
+            , major: this.props.major?this.props.major:""
+            , cumulativeGPA: this.props.cumulativeGPA?this.props.cumulativeGPA : ""
+            , allSchools : ""
+            , allMajors : ""
             , type : "UpdateEducationData"
+            , error : null
         }
 
         this.editClick = this.editClick.bind(this);
@@ -23,7 +27,22 @@ class Education extends Component {
         this.saveClick = this.saveClick.bind(this);
         this.schoolNameChangeHandler = this.schoolNameChangeHandler.bind(this);
         this.majorChange = this.majorChange.bind(this);
+        this.onGPAChange = this.onGPAChange.bind(this);
         
+    }
+
+    componentWillMount(){
+        debugger;
+        axios.get(serverUrl+'getEducationMasterData')
+                .then((response) => {
+                    debugger;
+                //update the state with the response data
+                console.log("data " + response.data);
+                this.setState({
+                    allSchools : response.data[0][0].schools
+                    ,allMajors : response.data[1][0].majors
+                });
+            });
     }
 
     schoolNameChangeHandler (e){
@@ -38,12 +57,17 @@ class Education extends Component {
         })
     }
 
-  
+    onGPAChange(e){
+        this.setState({
+            cumulativeGPA : e.target.value
+        })
+    }
 
     editClick(e) {
         e.preventDefault();
         this.setState({
             isEditEnabled : true
+            ,isValueUpdated : false
         })
     }
 
@@ -55,35 +79,53 @@ class Education extends Component {
     }
 
     saveClick(e) {
+        debugger;
         e.preventDefault();
         axios.defaults.withCredentials = true;
-        var data = {
-            userId: this.props.email
-            ,type : this.state.type
-            ,schoolName : this.state.schoolName
-            ,major : this.state.major
-            ,token : cookie.load('cookie')
+        var isDataValid = true;
+        if(!this.state.allMajors.includes(this.state.major)){
+            isDataValid = false;
+        }else if(!this.state.allSchools.includes(this.state.schoolName)){
+            isDataValid = false;
+        }else if(this.state.cumulativeGPA!="" && isNaN(parseFloat(this.state.cumulativeGPA))){
+            isDataValid = false;
         }
-        axios.post('http://localhost:3001/profile',data)
-                .then((response) => {
-                //update the state with the response data
 
-                console.log(response);
-                if(response.status === 200){
-                    this.setState({
-                        isEditEnabled : false
-                        ,isValueUpdated : true
-                    });   
-                }else{
-                    this.setState({
-                        isEditEnabled : false
-                        ,isValueUpdated : false
-                    });
-                }
-            });
+        if(isDataValid){
+            var data = {
+                userId: this.props.email
+                ,type : this.state.type
+                ,schoolName : this.state.schoolName
+                ,major : this.state.major
+                ,cumulativeGPA : this.state.cumulativeGPA
+                ,token : cookie.load('cookie')
+            }
+            axios.post(serverUrl+'profile',data)
+                    .then((response) => {
+                    //update the state with the response data
+
+                    console.log(response);
+                    if(response.status === 200){
+                        this.setState({
+                            isEditEnabled : false
+                            ,isValueUpdated : true
+                        });   
+                    }else{
+                        this.setState({
+                            isEditEnabled : false
+                            ,isValueUpdated : false
+                        });
+                    }
+                });
+        }else{
+           this.setState({
+               error : <label className="error">Enter Valid Data!!</label>
+           }) 
+        }
     }
 
     render() {
+        debugger;
         var editButton = null;
         if(!this.props.isReadOnly){
             editButton = (<button type="button" className="cancelButton" onClick={this.editClick} >
@@ -91,7 +133,7 @@ class Education extends Component {
                         </button>)
         }
         var eduData;
-        if (!this.state.isEditEnabled) {
+        if (!this.state.isEditEnabled && !this.state.isValueUpdated) {
             eduData = (<div className="row">
                             <div className="col-md-10">
                             <label>{this.props.schoolName}</label>
@@ -101,11 +143,6 @@ class Education extends Component {
                             <label>Major in {this.props.major}</label>
                             <p></p>
                             <label>Cumulative GPA : {this.props.cumulativeGPA}</label>
-                            <span> <svg className="svgGPA icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                <path fill="currentColor" d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z">
-                                </path>
-                                </svg>
-                            </span>
                             </div>
                             <div className="col-md-2">
                                 {editButton}
@@ -114,18 +151,13 @@ class Education extends Component {
         }else if(this.state.isValueUpdated) {
             eduData = (<div className="row">
                             <div className="col-md-10">
-                            <label>{this.state.schoolName}</label>
+                            <label>{this.state.schoolName==""?this.props.schoolName:this.state.schoolName}</label>
                             <p></p>
                             <label>{this.props.startDate} - {this.props.endDate}</label>
                             <p></p>
-                            <label>Major in {this.state.major}</label>
+                            <label>Major in {this.state.major==""?this.props.major:this.state.major}</label>
                             <p></p>
-                            <label>Cumulative GPA : {this.props.cumulativeGPA}</label>
-                            <span> <svg className="svgGPA icon" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
-                                <path fill="currentColor" d="M400 224h-24v-72C376 68.2 307.8 0 224 0S72 68.2 72 152v72H48c-26.5 0-48 21.5-48 48v192c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V272c0-26.5-21.5-48-48-48zm-104 0H152v-72c0-39.7 32.3-72 72-72s72 32.3 72 72v72z">
-                                </path>
-                                </svg>
-                            </span>
+                            <label>Cumulative GPA : {this.state.cumulativeGPA==""?this.props.cumulativeGPA:this.state.cumulativeGPA}</label>
                             </div>
                             <div className="col-md-2">
                             {editButton}
@@ -148,11 +180,14 @@ class Education extends Component {
                                 </div>
                                 <label>Major</label>
                                     <div className="form-group">
-                                    <input type="text" onChange={this.MajorChange} className="form-control" placeholder="Major" defaultValue={this.props.major} />
+                                    <input type="text" onChange={this.majorChange} className="form-control" placeholder="Major" defaultValue={this.props.major} />
                                 </div>
                                 <label>Cumulative GPA</label>
                                     <div className="form-group">
-                                    <input type="text" disabled className="form-control" placeholder="Cumulative GPA" defaultValue={this.props.cumulativeGPA} />
+                                    <input type="text" onChange={this.onGPAChange} className="form-control" placeholder="Cumulative GPA" defaultValue={this.props.cumulativeGPA} />
+                                </div>
+                                <div className="form-group">
+                                    {this.state.error}
                                 </div>
                             </div>
                             <div className="col-md-2">

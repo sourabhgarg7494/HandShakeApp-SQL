@@ -44,6 +44,15 @@ class JobPreview extends Component {
                     let resumeList  = response.data[0].map(resume => {
                         return {key: resume.ResumePath, value : resume.FileName}
                     });
+                    if (!resumeList.length){
+                        this.setState({
+                            isUploadNewResume : true
+                        });    
+                    }else{
+                        this.setState({
+                            isUploadNewResume : false
+                        });
+                    }
                     this.setState({
                         allResumes : this.state.allResumes.concat(resumeList)
                         ,isApplyEnabled : true
@@ -100,7 +109,6 @@ class JobPreview extends Component {
                     isUploadNewResume : false
                     ,selectedResume : response.data.file
                     ,allResumes : this.state.allResumes.concat(newResume)
-                    ,
                 });
                 this.isResumeUploadedOrSeletected = true;
             }

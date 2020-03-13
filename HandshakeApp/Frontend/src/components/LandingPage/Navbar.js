@@ -38,11 +38,10 @@ class Navbar extends Component {
             }else if(cookie.load('userrole')==="Company"){
                 menuItems = (
                     <ul className="nav navbar-nav navbar-right">
-                            <li><Link to="/Profile">Profile</Link></li>
-                            <li><Link to="#">Post Jobs</Link></li>
-                            <li><Link to="#">Company Profile</Link></li>
-                            <li><Link to="#">Students</Link></li>
-                            <li><Link to="#">Events</Link></li>
+                            <li><Link to="/CompanyProfile">Profile</Link></li>
+                            <li><Link to="/CompanyJobPostings">Post Jobs</Link></li>
+                            <li><Link to="/StudentSearch">Students</Link></li>
+                            <li><Link to="/EventListings">Events</Link></li>
                             <li><Link to="/" onClick = {this.handleLogout}><span className="glyphicon glyphicon-user"></span>Logout</Link></li>
                     </ul>
                 );

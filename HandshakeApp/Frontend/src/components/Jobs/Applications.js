@@ -125,7 +125,7 @@ class Applications extends Component {
                     <div className="innerContainer">
                         <div className="innerNavBar">
                             <h2 className="innerNavBarHeading jobs">
-                                Job Search
+                                Applications
                             </h2>
                             <div class="rightLinksSubNavBar">
                                 <Link className="SubNavBarRightItem" to="/StudentJobPostings">Job Search</Link>

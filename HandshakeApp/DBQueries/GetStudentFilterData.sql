@@ -1,11 +1,12 @@
 DROP PROCEDURE GetStudentFilterData 
-CALL GetStudentFilterData ('','','',1,10,'test@sjsu.edu')
+CALL GetStudentFilterData ('','','',',AngularJS',1,20,'test@sjsu.edu')
 
 DELIMITER //
 
 CREATE PROCEDURE GetStudentFilterData (IN Studentname VARCHAR(500)
 								, SchoolName varchar(4000)
                                 , Major varchar(4000)
+                                , Skill varchar(4000)
                                 , startIndex int
                                 , rowCount int
                                 , UserId varchar(500))
@@ -39,13 +40,30 @@ LEFT JOIN ( SELECT sem.* FROM studentexperiencemapping sem
 			FROM studentexperiencemapping 
             GROUP BY StudentId) SEML ON SEML.StudentId = SEM.StudentID AND SEML.EndDate = SEM.EndDate
             ) SEML ON seml.StudentId = sd.StudentId
+LEFT JOIN studentskillmapping ssm on ssm.StudentId = sd.StudentId
+LEFT JOIN skillmaster skm on skm.Id = ssm.SkillId
 WHERE find_in_set(mm.Name, IFNULL(NULLIF(Major,''),(select group_concat(Name) FROM MajorMAster)))
-AND find_in_set(sm.Name, IFNULL(NULLIF(SchoolName,''),(select group_concat(Name) FROM Schoolmaster)))  
-AND usr.EmailId not like UserId          
+AND find_in_set(sm.Name, IFNULL(NULLIF(SchoolName,''),(select group_concat(Name) FROM Schoolmaster)))      
+AND 1 = case when IFNULL(Skill,'') = '' AND IFNULL(skm.Name,'') = '' then 1
+			when find_in_set(skm.Name, IFNULL(NULLIF(Skill,''),(select group_concat(Name) FROM SkillMaster))) IS NOT NULL 
+                AND find_in_set(skm.Name, IFNULL(NULLIF(Skill,''),(select group_concat(Name) FROM SkillMaster))) != 0 
+                then 1
+            else 0 end
 AND 1 = case when IFNULL(StudentName,'') = '' then 1
 			when sd.FullName like CONCAT('%',StudentName,'%') then 1
             else 0 end
-    ) as stu;
+AND usr.EmailId not like UserId      
+GROUP BY sd.FullName
+        ,sd.ProfilePicturePath
+		,SDEM.StudentId
+        ,SDEM.EndDate
+        ,sm.Name 
+        ,mm.Name 
+        ,seml.CompanyName
+        ,seml.Title
+        ,usr.EmailId
+    ) as stu
+;
 
 
 select * from searchData WHERE row_num >= startIndex

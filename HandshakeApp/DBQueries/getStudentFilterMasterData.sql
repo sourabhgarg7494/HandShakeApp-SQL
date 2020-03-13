@@ -7,7 +7,10 @@ BEGIN
 	select Name FROM SchoolMAster order By OrderId ASC;
     
     select Name FROM majormaster Order by OrderId ASC;
+    
+    select Name FROM skillmaster order by OrderId ASC;
 END //
 
 DELIMITER ;
+
 

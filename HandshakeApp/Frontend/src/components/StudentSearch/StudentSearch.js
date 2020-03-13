@@ -17,15 +17,18 @@ class StudentSearch extends Component {
             ,filterName : ""
             ,schoolNameFilter : ""
             ,majorFilter : ""
+            ,skillFilter : ""
             ,startIndex : 1
             ,rowCount : 10
             ,schools : []
             ,majors : []
+            ,skills : []
         }
 
         this.filterNameChange = this.filterNameChange.bind(this);
         this.handleClickSchoolCheckBox = this.handleClickSchoolCheckBox.bind(this);
         this.handleClickMajorCheckBox = this.handleClickMajorCheckBox.bind(this);
+        this.handleClickSkillCheckBox = this.handleClickSkillCheckBox.bind(this);
         this.onPrevPageBtnClick = this.onPrevPageBtnClick.bind(this);
         this.onNextPageBtnClick = this.onNextPageBtnClick.bind(this);
     }
@@ -42,9 +45,13 @@ class StudentSearch extends Component {
                 let allmajors = response.data[1].map(major => {
                     return {Name : major.Name, checked : false}
                 });
+                let allskills = response.data[2].map(skill => {
+                    return {Name : skill.Name, checked : false}
+                });
                 this.setState({
                     schools : this.state.schools.concat(allSchools)
                     ,majors : this.state.majors.concat(allmajors)
+                    ,skills : this.state.skills.concat(allskills)
                 });
             });
     }
@@ -61,6 +68,7 @@ class StudentSearch extends Component {
             studentName : this.state.filterName
             ,schoolName : this.state.schoolNameFilter
             ,major : this.state.majorFilter
+            ,skill : this.state.skillFilter
             ,startIndex : this.state.startIndex
             ,rowCount : this.state.rowCount
             ,token:cookie.load('cookie')
@@ -163,6 +171,28 @@ class StudentSearch extends Component {
         },() => {this.searchApiCall()})
     }
 
+    handleClickSkillCheckBox(e){
+        debugger;
+        var allSkills = this.state.skills;
+        allSkills.filter( skill =>{
+            if(skill.Name === e.target.value)
+                skill.checked = e.target.checked
+        })
+        var skilldatafilter = this.state.skillFilter
+        if(e.target.checked)
+            skilldatafilter+= "," + e.target.value;
+        else{
+            skilldatafilter = skilldatafilter.replace(","+e.target.value,"")
+        }
+        this.setState({
+            skills : allSkills
+            ,skillFilter : skilldatafilter
+            ,searchData : []
+            ,currentPage : 1
+            ,startIndex : 1
+        },() => {this.searchApiCall()})
+    }
+
     render(){
 
         let cbschools = this.state.schools.map(school => {
@@ -179,6 +209,15 @@ class StudentSearch extends Component {
                 <div className="schoolCheclBoxDiv">
                     <input name="schoolCheckBox" className="form-control inputSchoolCheckBox" checked={!!major.checked} onClick={this.handleClickMajorCheckBox} value={major.Name} type="checkbox" id="schoolCheckBox"/>
                     <label className="control-label schoolsLabel"><div> {major.Name}</div></label>
+                </div>
+            )
+        })
+
+        let cbSkills = this.state.skills.map(skill =>{
+            return (
+                <div className="schoolCheclBoxDiv">
+                    <input name="schoolCheckBox" className="form-control inputSchoolCheckBox" checked={!!skill.checked} onClick={this.handleClickSkillCheckBox} value={skill.Name} type="checkbox" id="schoolCheckBox"/>
+                    <label className="control-label schoolsLabel"><div> {skill.Name}</div></label>
                 </div>
             )
         })
@@ -279,10 +318,6 @@ class StudentSearch extends Component {
                                             <div className="divInsideHide">
                                                 <div>
                                                     {cbschools}
-                                                    {/* <div className="schoolCheclBoxDiv">
-                                                        <input name="schoolCheckBox" className="form-control inputSchoolCheckBox" type="checkbox" id="schoolCheckBox"/>
-                                                        <label className="control-label schoolsLabel"><div> San Jose State University</div></label>
-                                                    </div> */}
                                                 </div>
                                             </div>
                                         </div>
@@ -298,10 +333,21 @@ class StudentSearch extends Component {
                                             <div className="divInsideHide">
                                                 <div>
                                                     {cbmajors}
-                                                    {/* <div className="schoolCheclBoxDiv">
-                                                        <input name="schoolCheckBox" className="form-control inputSchoolCheckBox" type="checkbox" id="schoolCheckBox"/>
-                                                        <label className="control-label schoolsLabel"><div> San Jose State University</div></label>
-                                                    </div> */}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className="filterSeparator"></div>
+                                        <div className="studentFilterTypediv">
+                                            <svg aria-hidden="true" data-prefix="far" data-icon="chevron-up" className="filterSvg" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512">
+                                                <path fill="currentColor" d="M6.101 359.293L25.9 379.092c4.686 4.686 12.284 4.686 16.971 0L224 198.393l181.13 180.698c4.686 4.686 12.284 4.686 16.971 0l19.799-19.799c4.686-4.686 4.686-12.284 0-16.971L232.485 132.908c-4.686-4.686-12.284-4.686-16.971 0L6.101 342.322c-4.687 4.687-4.687 12.285 0 16.971z">
+                                                </path>
+                                            </svg>
+                                            <h5 className="filterHeading">Skills</h5>
+                                        </div>
+                                        <div className="filterInputHide" style={{overflow: 'visible'}}>
+                                            <div className="divInsideHide">
+                                                <div>
+                                                    {cbSkills}
                                                 </div>
                                             </div>
                                         </div>
