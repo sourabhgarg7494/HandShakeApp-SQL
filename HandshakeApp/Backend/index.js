@@ -63,7 +63,7 @@ var UserTokens = []
 
 
 async function getUserData(UserEmailId){ 
-    var query = "CALL GetUserDetailByEmailId(?)";
+    var query = "CALL getuserdetailbyemailId(?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query,UserEmailId);
@@ -74,7 +74,7 @@ async function getUserData(UserEmailId){
 }
 
 async function createUserData(data){ 
-    var query = "CALL CreateUser(?,?,?,?,?,?,?,?,?,?)";
+    var query = "CALL createuser(?,?,?,?,?,?,?,?,?,?)";
 
     var salt = genSalt.generate();
 
@@ -101,7 +101,7 @@ async function createUserData(data){
 }
 
 async function createCompanyUser(data){ 
-    var query = "CALL CreateCompanyUser(?,?,?,?,?,?,?,?,?,?,?)";
+    var query = "CALL createcompanyuser(?,?,?,?,?,?,?,?,?,?,?)";
 
     var salt = genSalt.generate();
    
@@ -128,7 +128,7 @@ async function createCompanyUser(data){
 }
 
 async function getSignUpMasterData(){ 
-    var query = "CALL GetSchoolMaster()";
+    var query = "CALL getschoolmaster()";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query);
@@ -139,7 +139,7 @@ async function getSignUpMasterData(){
 }
 
 async function getExperienceMasterData(){ 
-    var query = "CALL getExperienceMasterData()";
+    var query = "CALL getexperiencemasterdata()";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query);
@@ -150,7 +150,7 @@ async function getExperienceMasterData(){
 }
 
 async function getEducationMasterData(){ 
-    var query = "CALL getEducationMasterData()";
+    var query = "CALL geteducationmasterdata()";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query);
@@ -161,7 +161,7 @@ async function getEducationMasterData(){
 }
 
 async function getApplicationMasterData(data){ 
-    var query = "CALL GetApplicationMasterData(?)";
+    var query = "CALL getapplicationmasterdata(?)";
     var con = await mysql.createConnection(databaseConString);
     var UserId = getUserIdFromToken(data.token);
     console.log("inside con");
@@ -175,7 +175,7 @@ async function getApplicationMasterData(data){
 
 
 async function getUploadedResumeList(UserId){ 
-    var query = "CALL getUploadedResumeList(?)";
+    var query = "CALL getuploadedresumelist(?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query, UserId);
@@ -187,7 +187,7 @@ async function getUploadedResumeList(UserId){
 
 
 async function getMasterDataJobPosting(){ 
-    var query = "CALL getMasterDataJobPosting()";
+    var query = "CALL getmasterdatajobposting()";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query);
@@ -199,7 +199,7 @@ async function getMasterDataJobPosting(){
 
 
 async function getMasterCompanyProfile(){ 
-    var query = "CALL getMasterCompanyProfile()";
+    var query = "CALL getmastercompanyprofile()";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query);
@@ -210,7 +210,7 @@ async function getMasterCompanyProfile(){
 }
 
 async function getNewJobPostMasterData(){ 
-    var query = "CALL getNewJobPostMasterData()";
+    var query = "CALL getnewjobpostmasterdata()";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query);
@@ -221,7 +221,7 @@ async function getNewJobPostMasterData(){
 }
 
 async function getNewEventPostMasterData(){ 
-    var query = "CALL getNewEventPostMasterData()";
+    var query = "CALL getneweventpostmasterdata()";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query);
@@ -232,7 +232,7 @@ async function getNewEventPostMasterData(){
 }
 
 async function getEventListings(data){ 
-    var query = "CALL getEventListings(?,?)";
+    var query = "CALL geteventlistings(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -244,7 +244,7 @@ async function getEventListings(data){
 }
 
 async function getCompanyEventListings(data){ 
-    var query = "CALL getCompanyEventListings(?)";
+    var query = "CALL getcompanyeventlistings(?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -256,7 +256,7 @@ async function getCompanyEventListings(data){
 }
 
 async function updateStatus(data){ 
-    var query = "CALL updateStatus(?,?,?)";
+    var query = "CALL updatestatus(?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query,[data.status,data.JobId,data.StudentId]);
@@ -267,7 +267,7 @@ async function updateStatus(data){
 }
 
 async function getEventDetails(data){ 
-    var query = "CALL getEventDetails(?,?)";
+    var query = "CALL geteventdetails(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -279,7 +279,7 @@ async function getEventDetails(data){
 }
 
 async function getCompanyEventStudentList(data){ 
-    var query = "CALL getCompanyEventStudentList(?)";
+    var query = "CALL getcompanyeventstudentlist(?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -291,7 +291,7 @@ async function getCompanyEventStudentList(data){
 }
 
 async function registerForEvent(data){ 
-    var query = "CALL registerForEvent(?,?)";
+    var query = "CALL registerforevent(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -303,7 +303,7 @@ async function registerForEvent(data){
 }
 
 async function leaveEvent(data){ 
-    var query = "CALL leaveEvent(?,?)";
+    var query = "CALL leaveevent(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -315,7 +315,7 @@ async function leaveEvent(data){
 }
 
 async function getJobPosting(data){ 
-    var query = "CALL getJobPostings(?,?,?,?,?)";
+    var query = "CALL getjobpostings(?,?,?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -327,7 +327,7 @@ async function getJobPosting(data){
 }
 
 async function getCompanyJobPosting(data){ 
-    var query = "CALL getCompanyJobPosting(?)";
+    var query = "CALL getcompanyjobposting(?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -339,7 +339,7 @@ async function getCompanyJobPosting(data){
 }
 
 async function fetchJobApplications(data){ 
-    var query = "CALL fetchJobApplications(?)";
+    var query = "CALL fetchjobapplications(?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query,data.jobId);
@@ -350,7 +350,7 @@ async function fetchJobApplications(data){
 }
 
 async function getJobDetails(data){ 
-    var query = "CALL getJobDetails(?,?)";
+    var query = "CALL getjobdetails(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -362,7 +362,7 @@ async function getJobDetails(data){
 }
 
 async function getCompanySignUpMasterData(){ 
-    var query = "CALL GetCompanySignUpMaster()";
+    var query = "CALL getcompanysignupmaster()";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query);
@@ -381,7 +381,7 @@ async function getProfileData(data){
     }else{
         var UserId = profileEmail;
     }
-    var query = "CALL GetUserData(?)";
+    var query = "CALL getuserdata(?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query, UserId);
@@ -394,7 +394,7 @@ async function getProfileData(data){
 async function getCompanyProfileData(data){ 
     var UserId = getUserIdFromToken(data.token);
 
-    var query = "CALL GetCompanyUserData(?)";
+    var query = "CALL getcompanyuserdata(?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query, UserId);
@@ -407,7 +407,7 @@ async function getCompanyProfileData(data){
 async function updateCompanyProfileData(data){ 
     var UserId = getUserIdFromToken(data.token);
 
-    var query = "CALL updateCompanyProfileData(?,?,?,?,?,?,?,?)";
+    var query = "CALL updatecompanyprofiledata(?,?,?,?,?,?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query, [UserId
@@ -428,7 +428,7 @@ async function updateCompanyProfileData(data){
 async function insertNewJob(data){ 
     var UserId = getUserIdFromToken(data.token);
 
-    var query = "CALL insertNewJob(?,?,?,?,?,?,?,?,?,?)";
+    var query = "CALL insertnewjob(?,?,?,?,?,?,?,?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query, [UserId
@@ -451,7 +451,7 @@ async function insertNewJob(data){
 async function insertNewEvent(data){ 
     var UserId = getUserIdFromToken(data.token);
 
-    var query = "CALL insertNewEvent(?,?,?,?,?,?,?,?,?)";
+    var query = "CALL insertnewevent(?,?,?,?,?,?,?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query, [UserId
@@ -471,7 +471,7 @@ async function insertNewEvent(data){
 }
 
 async function updateOverviewData(data){ 
-    var query = "CALL UpdateOverviewData(?,?,?)";
+    var query = "CALL updateoverviewdata(?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -483,7 +483,7 @@ async function updateOverviewData(data){
 }
 
 async function updateEducationData(data){ 
-    var query = "CALL UpdateEducationData(?,?,?,?)";
+    var query = "CALL updateeducationdata(?,?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -495,7 +495,7 @@ async function updateEducationData(data){
 }
 
 async function updateExperienceData(data){ 
-    var query = "CALL updateExperienceData(?,?,?,?,?,?,?,?,?,?)";
+    var query = "CALL updateexperiencedata(?,?,?,?,?,?,?,?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -517,7 +517,7 @@ async function updateExperienceData(data){
 }
 
 async function UpdateObjective(data){ 
-    var query = "CALL UpdateObjective(?,?)";
+    var query = "CALL updateobjective(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var UserId = getUserIdFromToken(data.token);
@@ -529,7 +529,7 @@ async function UpdateObjective(data){
 }
 
 async function UpdateProfilePicLocation(userId,profilePicPath){ 
-    var query = "CALL UpdateProfilePicPath(?,?)";
+    var query = "CALL updateprofilepicpath(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query, [userId,profilePicPath]);
@@ -540,7 +540,7 @@ async function UpdateProfilePicLocation(userId,profilePicPath){
 }
 
 async function UpdateResumeLocation(userId,resumePath,originalName){ 
-    var query = "CALL UpdateResumePath(?,?,?)";
+    var query = "CALL updateresumepath(?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query, [userId,resumePath,originalName]);
@@ -551,7 +551,7 @@ async function UpdateResumeLocation(userId,resumePath,originalName){
 }
 
 async function addUserSkill(data){ 
-    var query = "CALL addUserSkill(?,?)";
+    var query = "CALL adduserskill(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     let UserId = getUserIdFromToken(data.token);
@@ -563,7 +563,7 @@ async function addUserSkill(data){
 }
 
 async function applyForJob(data){ 
-    var query = "CALL applyForJob(?,?,?)";
+    var query = "CALL applyforjob(?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     let UserId = getUserIdFromToken(data.token);
@@ -575,7 +575,7 @@ async function applyForJob(data){
 }
 
 async function getStudentFilterData(data){ 
-    var query = "CALL GetStudentFilterData(?,?,?,?,?,?,?)";
+    var query = "CALL getstudentfilterdata(?,?,?,?,?,?,?)";
     var con = await mysql.createConnection(databaseConString);
     let UserId = getUserIdFromToken(data.token);
     console.log("inside con");
@@ -588,7 +588,7 @@ async function getStudentFilterData(data){
 
 
 async function getApplicationData(data){ 
-    var query = "CALL GetApplicationData(?,?)";
+    var query = "CALL getapplicationdata(?,?)";
     var con = await mysql.createConnection(databaseConString);
     let UserId = getUserIdFromToken(data.token);
     console.log("inside con");
@@ -600,7 +600,7 @@ async function getApplicationData(data){
 }
 
 async function getRegisteredEventList(data){ 
-    var query = "CALL getRegisteredEventList(?)";
+    var query = "CALL getregisteredeventlist(?)";
     var con = await mysql.createConnection(databaseConString);
     let UserId = getUserIdFromToken(data.token);
     console.log("inside con");
@@ -613,7 +613,7 @@ async function getRegisteredEventList(data){
 
 
 async function getStudentFilterMaster(){
-    var query = "CALL getStudentFilterMasterData()";
+    var query = "CALL getstudentfiltermasterdata()";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     var [results, fields] = await con.query(query);
@@ -624,7 +624,7 @@ async function getStudentFilterMaster(){
 }
 
 async function deleteUserSkill(data){ 
-    var query = "CALL deleteUserSkill(?,?)";
+    var query = "CALL deleteuserskill(?,?)";
     var con = await mysql.createConnection(databaseConString);
     console.log("inside con");
     let UserId = getUserIdFromToken(data.token);
