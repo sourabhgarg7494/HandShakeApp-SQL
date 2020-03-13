@@ -85,34 +85,6 @@ class Profile extends Component {
     }
     componentDidMount(){
         debugger;
-        // axios.defaults.withCredentials = true;
-        // var data;
-        // if(this.state.email){
-        //     data = {
-        //         userId:this.state.email
-        //         ,type : this.state.type
-        //     }
-        // }
-        // axios.post('http://localhost:3001/profile',data)
-        //         .then((response) => {
-        //             debugger;
-        //         //update the state with the response data
-        //         this.setState({
-        //             myJourney : response.data[0][0].CarrerObjective
-        //             ,personalInfo : response.data[1][0]
-        //             ,emailId : response.data[1][0].EmailId
-        //             ,gender : response.data[1][0].Gender
-        //             ,firstName : response.data[2][0].FirstName
-        //             ,lastName : response.data[2][0].LastName
-        //             ,schoolName : response.data[2][0].SchoolName
-        //             ,major : response.data[2][0].Major
-        //             ,cumulativeGPA : response.data[2][0].CumulativeGPA
-        //             ,startDate : response.data[3][0].StartDate
-        //             ,endDate : response.data[3][0].EndDate
-        //             ,profilePicPath : response.data[2][0].ProfilePicturePath
-        //         });
-        //         console.log(response);
-        //     });
     }
 
     render(){

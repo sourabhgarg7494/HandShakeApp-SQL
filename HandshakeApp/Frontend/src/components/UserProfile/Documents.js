@@ -11,15 +11,6 @@ class Documents extends Component {
             books : []
         }
     }  
-    // componentDidMount(){
-    //     axios.get('http://localhost:3001/')
-    //             .then((response) => {
-    //             //update the state with the response data
-    //             this.setState({
-    //                 books : this.state.books.concat(response.data) 
-    //             });
-    //         });
-    // }
 
     render(){
         return(

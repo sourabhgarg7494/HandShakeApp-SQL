@@ -55,7 +55,7 @@ class MyJourney extends Component {
             ,type : this.state.type
             ,myJourney : this.state.myJourney
         }
-        axios.post('http://localhost:3001/profile',data)
+        axios.post(serverUrl+'profile',data)
                 .then((response) => {
                 //update the state with the response data
                 debugger;

@@ -60,7 +60,7 @@ class CompanySignUp extends Component {
 
     componentDidMount(){
         console.log("did mount");
-        axios.get('http://localhost:3001/companySignUp')
+        axios.get(serverUrl+'companySignUp')
                 .then((response) => {
                     debugger;
                 //update the state with the response data
@@ -237,7 +237,7 @@ class CompanySignUp extends Component {
             //set the with credentials to true
             axios.defaults.withCredentials = true;
             //make a post request with the user data 
-            axios.post('http://localhost:3001/companySignUp', data)
+            axios.post(serverUrl+'companySignUp', data)
                 .then(response => {
                     console.log("Response : ", response);
                     console.log("Status Code : ", response.status);
