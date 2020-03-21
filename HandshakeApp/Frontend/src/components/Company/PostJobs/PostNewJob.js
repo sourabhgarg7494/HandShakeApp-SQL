@@ -177,7 +177,7 @@ class PostNewJob extends Component {
             isValidData = false;
         }else if(!this.state.allCountries.includes(this.state.jobData.Country)){
             isValidData = false;
-        }else if(!isNaN(this.state.jobData.Salary)){
+        }else if(isNaN(this.state.jobData.Salary)){
             isValidData = false;
         }
 
