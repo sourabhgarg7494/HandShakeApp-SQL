@@ -1,1 +1,1 @@
-# SJSU
+# HandSkake App
